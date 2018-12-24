@@ -1,0 +1,42 @@
+{
+  "name": "ky-react-starter",
+  "version": "1.0.0",
+  "description": "A pure front end frame base on react, combine antd",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development webpack-dev-server",
+    "build": "webpack",
+    "build:prod": "cross-env NODE_ENV=production webpack"
+  },
+  "author": "rgy",
+  "license": "ISC",
+  "dependencies": {
+    "antd": "^3.11.4",
+    "axios": "^0.18.0",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "react-router-dom": "^4.3.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.5",
+    "babel-plugin-import": "^1.11.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "cross-env": "^5.2.0",
+    "css-loader": "^1.0.1",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "html-webpack-inline-source-plugin": "0.0.10",
+    "html-webpack-plugin": "^3.2.0",
+    "json-loader": "^0.5.7",
+    "less": "^3.9.0",
+    "less-loader": "^4.1.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^3.10.0",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^2.10.1"
+  }
+}

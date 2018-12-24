@@ -1,0 +1,84 @@
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+const isProd = process.env.NODE_ENV === 'production';
+const isDev = process.env.NODE_ENV === 'development';
+
+const webpackConfig = {
+	entry: path.resolve(__dirname, './app/app.js'),
+	output: {
+		path: path.resolve(__dirname, './static'),
+		filename: 'index-[hash:8].js'
+  },
+  resolve: {
+    extensions: ['.js', '.jsx'],
+    alias: {
+      '@app': path.resolve(__dirname, './app'),
+      '@components': path.resolve(__dirname, './app/components'),
+      '@utils': path.resolve(__dirname, './app/utils'),
+    }
+  },
+	devServer: {
+    contentBase: path.resolve(__dirname, './static'),
+    historyApiFallback: true,
+    hot: true,
+    progress: true,
+    host: '127.0.0.1',
+    port: 9999
+  },
+  devtool: "cheap-module-source-map",
+	module: {
+    loaders: [
+      {
+        test: /\.(js|jsx)$/,
+        loader: 'babel-loader',
+        include: __dirname + '/app',
+        exclude: '/node_modules/',
+      },
+      {
+        test: /\.json$/,
+        loader: 'json-loader',
+      },
+      {
+        test:/\.(css|less)$/,
+        loader: ExtractTextPlugin.extract({
+          use: [
+            { loader: 'css-loader' },
+            {
+              loader: 'less-loader',
+              options: {
+                javascriptEnabled: true
+              }
+            },
+          ],
+          fallback: 'style-loader',
+        }),
+        exclude: '/node_modules/',
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/,
+        loader: 'url-loader',
+        query: {
+          limit: 1024 * 10, // 10k以下编译成base64
+          name: 'img/[name]-[hash:6].[ext]',
+        }
+      },
+      {
+        test: /\.(eot|woff|woff2|ttf|svg)$/,
+        loader: 'file-loader',
+      }
+    ]
+  },
+	plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+		new webpack.BannerPlugin('版权所有，翻版必究'),
+		new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, './app/template.html'),
+		}),
+    new ExtractTextPlugin('style.css'),
+	]
+}
+
+module.exports = webpackConfig;
