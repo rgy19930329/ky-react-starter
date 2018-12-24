@@ -10,6 +10,8 @@ npm install
 ## Development
 ```
 npm run dev
+
+http://127.0.0.1:9999/
 ```
 
 ## Build

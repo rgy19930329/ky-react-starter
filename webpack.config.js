@@ -20,14 +20,6 @@ const webpackConfig = {
       '@utils': path.resolve(__dirname, './app/utils'),
     }
   },
-	devServer: {
-    contentBase: path.resolve(__dirname, './static'),
-    historyApiFallback: true,
-    hot: true,
-    progress: true,
-    host: '127.0.0.1',
-    port: 9999
-  },
   devtool: "cheap-module-source-map",
 	module: {
     loaders: [
@@ -79,6 +71,17 @@ const webpackConfig = {
 		}),
     new ExtractTextPlugin('style.css'),
 	]
+}
+
+if(isDev) {
+  webpackConfig.devServer = {
+    contentBase: path.resolve(__dirname, './static'),
+    historyApiFallback: true,
+    hot: true,
+    progress: true,
+    host: '127.0.0.1',
+    port: 9999,
+  };
 }
 
 module.exports = webpackConfig;
