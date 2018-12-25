@@ -20,7 +20,7 @@ const webpackConfig = {
       '@utils': path.resolve(__dirname, './app/utils'),
     }
   },
-  devtool: "cheap-module-source-map",
+  devtool: isProd ? "" : "cheap-module-source-map",
 	module: {
     loaders: [
       {
