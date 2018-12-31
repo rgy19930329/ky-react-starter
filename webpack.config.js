@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const serverProxy = require('./serverProxy');
 
 const isProd = process.env.NODE_ENV === 'production';
 const isDev = process.env.NODE_ENV === 'development';
@@ -81,6 +82,7 @@ if(isDev) {
     progress: true,
     host: '127.0.0.1',
     port: 9999,
+    proxy: serverProxy,
   };
 }
 
