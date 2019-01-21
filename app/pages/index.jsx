@@ -5,6 +5,7 @@ import { HashRouter, Route, Switch } from 'react-router-dom';
 import Header from '@components/Header';
 import Home from './home';
 import Config from './config';
+import MyForm from './form';
 
 class App extends React.Component {
 	render() {
@@ -14,6 +15,7 @@ class App extends React.Component {
 				<div style={{padding: 20}}>
 					<HashRouter>
 						<Switch>
+							<Route path="/form" component={MyForm} />
 							<Route path="/config" component={Config} />
 							<Route path="/home" component={Home} />
 							<Route path="/" component={Home} />

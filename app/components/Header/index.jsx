@@ -9,6 +9,7 @@ export default class Header extends React.Component {
 				<nav>
 					<a href="#/home">home</a>
 					<a href="#/config">config</a>
+					<a href="#/form">form</a>
 				</nav>
 			</div>
 		)
