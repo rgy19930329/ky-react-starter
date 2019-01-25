@@ -1,5 +1,7 @@
 import React from 'react';
-import { Form, Button, Input, } from 'antd';
+import { Form, Button, Input, Radio } from 'antd';
+import EnumSelect from '@components/EnumSelect';
+import { fetch } from '@utils';
 
 @Form.create()
 export default class MyForm extends React.Component {
@@ -15,6 +17,7 @@ export default class MyForm extends React.Component {
 		this.props.form.setFieldsValue({
 			name: 'rgy',
 			age: 25,
+			type: '1',
 		});
 	};
 
@@ -57,6 +60,34 @@ export default class MyForm extends React.Component {
 							}],
 						})(
 							<Input placeholder="Please input your age" />
+						)}
+					</Form.Item>
+					<Form.Item {...{
+						labelCol: { span: 4 },
+						wrapperCol: { span: 20 }
+					}} label="Type">
+						{getFieldDecorator('type')(
+							<Radio.Group>
+								<Radio value="1">type A</Radio>
+        				<Radio value="2">type B</Radio>
+							</Radio.Group>
+						)}
+					</Form.Item>
+					<Form.Item {...{
+						labelCol: { span: 4 },
+						wrapperCol: { span: 4 }
+					}} label="Identity">
+						{getFieldDecorator('identity')(
+							<EnumSelect
+								placeholder="请选择"
+								promiseCondition={this.props.form.getFieldValue('type')}
+								createPromise={() => fetch({
+									url: "/example/identifyType",
+									data: {
+										type: this.props.form.getFieldValue('type'),
+									}
+								}).then(res => res.data.list || [])}
+							/>
 						)}
 					</Form.Item>
 					<div style={{textAlign: 'right'}}>

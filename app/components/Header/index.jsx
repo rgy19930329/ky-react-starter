@@ -1,3 +1,9 @@
+/**
+ * 头部组件
+ * @author ranguangyu
+ * @date 2018-11-25
+ */
+
 import React from 'react';
 import './index.less';
 
