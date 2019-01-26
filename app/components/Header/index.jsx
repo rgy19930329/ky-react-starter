@@ -7,26 +7,53 @@
 import './index.less';
 import React from 'react';
 import { Menu, Icon, } from 'antd';
+import { withRouter } from "react-router";
 
+@withRouter
 export default class Header extends React.Component {
+
+	state = {
+		current: 'home',
+		navs: [
+			{ code: 'home', label: 'Home', icon: 'home' },
+			{ code: 'config', label: 'Config', icon: 'setting' },
+			{ code: 'form', label: 'Form', icon: 'form' },
+			{ code: 'list', label: 'List', icon: 'ordered-list' },
+		]
+	};
+
+	componentDidMount() {
+		this.updateActive(this.props);
+	}
+
+	componentWillReceiveProps(nextProps) {
+		this.updateActive(nextProps);
+	}
+
+	updateActive = (props) => {
+		let pathname = props.location.pathname.slice(1);
+		let pathList = pathname.split('/');
+		let current = pathList[0];
+		this.setState({ current });
+	}
+
 	render() {
 		return (
 			<div className="header">
 				<Menu
+					onClick={(e) => this.setState({ current: e.key })}
+					selectedKeys={[this.state.current]}
 					mode="horizontal"
 				>
-					<Menu.Item key="home">
-						<a href="#/home"><Icon type="home" /> Home</a>
-					</Menu.Item>
-					<Menu.Item key="config">
-						<a href="#/config"><Icon type="setting" /> Config</a>
-					</Menu.Item>
-					<Menu.Item key="form">
-						<a href="#/form"><Icon type="form" /> Form</a>
-					</Menu.Item>
-					<Menu.Item key="list">
-						<a href="#/list"><Icon type="ordered-list" /> List</a>
-					</Menu.Item>
+					{this.state.navs.map(item => {
+						return (
+							<Menu.Item key={item.code}>
+								<a href={`#/${item.code}`}><Icon type={item.icon} />
+									{item.label}
+								</a>
+							</Menu.Item>
+						)
+					})}
 				</Menu>
 			</div>
 		)

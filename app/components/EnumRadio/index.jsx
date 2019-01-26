@@ -1,30 +1,26 @@
 /**
- * 下拉框组件
+ * 单选框组件
  * @author ranguangyu
- * @date 2019-01-25
+ * @date 2019-01-26
  */
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Select } from 'antd';
+import { Radio } from 'antd';
 
-const Option = Select.Option;
-
-export default class EnumSelect extends React.Component {
+export default class EnumRadio extends React.Component {
   static propTypes = {
     list: PropTypes.array, // 数据源列表
     codeKey: PropTypes.string, // code 键名
     labelKey: PropTypes.string, // label 键名
     createPromise: PropTypes.func, // 传入一个生成promise的函数
     promiseCondition: PropTypes.string, // promise重复触发条件标识
-    hasAll: PropTypes.bool, // 是否能选择"全部"
   }
 
   static defaultProps = {
     list: [],
     codeKey: 'code',
     labelKey: 'name',
-    hasAll: false,
     promiseCondition: '',
   }
 
@@ -50,33 +46,23 @@ export default class EnumSelect extends React.Component {
   }
 
   render() {
-    const { codeKey, labelKey, hasAll } = this.props;
+    const { codeKey, labelKey } = this.props;
     const list = this.state.list || this.props.list || [];
-    const options = list.map(item => {
-      if (typeof item !== 'object') {
+    const radios = list.map(item => {
+      if(typeof item !== 'object') {
         return (
-          <Option value={item} key={`option-${item}`}>
-            {item}
-          </Option>
+          <Radio value={item} key={`radio-${item}`}>{item}</Radio>
         )
-      } else {
+      }else{
         return (
-          <Option value={item[codeKey]} key={`option-${item[codeKey]}`}>
+          <Radio value={item[codeKey]} key={`radio-${item[codeKey]}`}>
             {item[labelKey]}
-          </Option>
+          </Radio>
         )
       }
     });
     return (
-      hasAll ?
-        <Select {...this.props}>
-          <Option value="">全部</Option>
-          {options}
-        </Select>
-        :
-        <Select {...this.props}>
-          {options}
-        </Select>
+      <Radio.Group {...this.props}>{radios}</Radio.Group>
     )
   }
 } 

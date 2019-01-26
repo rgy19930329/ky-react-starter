@@ -1,13 +1,11 @@
 import React from 'react';
 import { Form, Button, Input, Radio } from 'antd';
 import EnumSelect from '@components/EnumSelect';
+import EnumRadio from '@components/EnumRadio';
 import { fetch } from '@utils';
 
 @Form.create()
 export default class MyForm extends React.Component {
-	constructor(props) {
-		super(props);
-	}
 
 	componentDidMount() {
 		this.initFormData();
@@ -17,7 +15,8 @@ export default class MyForm extends React.Component {
 		this.props.form.setFieldsValue({
 			name: 'rgy',
 			age: 25,
-			type: '1',
+			type: '2',
+			identity: '002',
 		});
 	};
 
@@ -67,10 +66,10 @@ export default class MyForm extends React.Component {
 						wrapperCol: { span: 20 }
 					}} label="Type">
 						{getFieldDecorator('type')(
-							<Radio.Group>
-								<Radio value="1">type A</Radio>
-        				<Radio value="2">type B</Radio>
-							</Radio.Group>
+							<EnumRadio list={[
+								{ code: '1', name: 'type A' },
+								{ code: '2', name: 'type B' },
+							]} />
 						)}
 					</Form.Item>
 					<Form.Item {...{

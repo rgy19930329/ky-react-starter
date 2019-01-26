@@ -11,7 +11,7 @@
   "author": "rgy",
   "license": "ISC",
   "dependencies": {
-    "antd": "^3.11.4",
+    "antd": "^3.12.4",
     "axios": "^0.18.0",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",

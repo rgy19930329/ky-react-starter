@@ -16,7 +16,6 @@ export default class Config extends React.Component {
 				'X-Auth-Token': 'a19cd479f22d46899ff4d0ae52dc6dfc'
 			}
 		});
-		console.log(result);
 		const { count, filters } = result;
 		this.setState({
 			count,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Spin } from 'antd';
+import { Table } from 'antd';
 import { fetch } from '@utils';
 
 export default class Home extends React.Component {
