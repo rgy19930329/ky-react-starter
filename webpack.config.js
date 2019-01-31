@@ -18,10 +18,11 @@ const webpackConfig = {
     alias: {
       '@app': path.resolve(__dirname, './app'),
       '@components': path.resolve(__dirname, './app/components'),
+      '@pages': path.resolve(__dirname, './app/pages'),
       '@utils': path.resolve(__dirname, './app/utils'),
     }
   },
-  devtool: isProd ? "" : "cheap-module-source-map",
+  devtool: isProd ? '' : 'cheap-module-source-map',
 	module: {
     loaders: [
       {

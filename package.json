@@ -11,12 +11,15 @@
   "author": "rgy",
   "license": "ISC",
   "dependencies": {
+    "animate.css": "^3.7.0",
     "antd": "^3.12.4",
     "axios": "^0.18.0",
     "prop-types": "^15.6.2",
+    "rc-queue-anim": "^1.6.11",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
-    "react-router-dom": "^4.3.1"
+    "react-router-dom": "^4.3.1",
+    "react-transition-group": "^2.5.3"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

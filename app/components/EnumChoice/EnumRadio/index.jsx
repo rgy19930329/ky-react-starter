@@ -7,7 +7,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Radio } from 'antd';
+import HOCLoading from '@components/HOCLoading';
 
+@HOCLoading
 export default class EnumRadio extends React.Component {
   static propTypes = {
     list: PropTypes.array, // 数据源列表
@@ -24,7 +26,9 @@ export default class EnumRadio extends React.Component {
     promiseCondition: '',
   }
 
-  state = {};
+  state = {
+    loaded: true,
+  };
 
   componentDidMount() {
     const { createPromise } = this.props;

@@ -7,7 +7,7 @@
 import './index.less';
 import React from 'react';
 import { Menu, Icon, } from 'antd';
-import { withRouter } from "react-router";
+import { withRouter } from 'react-router';
 
 @withRouter
 export default class Header extends React.Component {
@@ -19,6 +19,7 @@ export default class Header extends React.Component {
 			{ code: 'config', label: 'Config', icon: 'setting' },
 			{ code: 'form', label: 'Form', icon: 'form' },
 			{ code: 'list', label: 'List', icon: 'ordered-list' },
+			{ code: 'animate', label: 'Animate', icon: 'shake' },
 		]
 	};
 

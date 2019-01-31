@@ -6,8 +6,10 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Checkbox } from 'antd';
+import { Checkbox, Spin, Icon } from 'antd';
+import HOCLoading from '@components/HOCLoading';
 
+@HOCLoading
 export default class EnumCheckbox extends React.Component {
   static propTypes = {
     list: PropTypes.array, // 数据源列表
@@ -24,7 +26,9 @@ export default class EnumCheckbox extends React.Component {
     promiseCondition: '',
   }
 
-  state = {};
+  state = {
+    loaded: true,
+  };
 
   componentDidMount() {
     const { createPromise } = this.props;
@@ -39,10 +43,12 @@ export default class EnumCheckbox extends React.Component {
   }
 
   load = async (enumPromise) => {
+    this.setState({ loaded: false });
     const list = await enumPromise;
     if (list.length > 0) {
       this.setState({ list });
     }
+    this.setState({ loaded: true });
   }
 
   render() {
@@ -61,6 +67,7 @@ export default class EnumCheckbox extends React.Component {
         )
       }
     });
+
     return (
       <Checkbox.Group {...this.props}>{checkboxs}</Checkbox.Group>
     )
