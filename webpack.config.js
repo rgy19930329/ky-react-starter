@@ -28,7 +28,7 @@ const webpackConfig = {
       {
         test: /\.(js|jsx)$/,
         loader: 'babel-loader',
-        include: __dirname + '/app',
+        include: path.resolve(__dirname, './app'),
         exclude: '/node_modules/',
       },
       {
@@ -66,7 +66,6 @@ const webpackConfig = {
     ]
   },
 	plugins: [
-    new webpack.HotModuleReplacementPlugin(),
 		new webpack.BannerPlugin('版权所有，翻版必究'),
 		new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './app/template.html'),
@@ -76,6 +75,10 @@ const webpackConfig = {
 }
 
 if(isDev) {
+  webpackConfig.plugins.push(
+    new webpack.NamedModulesPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+  );
   webpackConfig.devServer = {
     contentBase: path.resolve(__dirname, './static'),
     historyApiFallback: true,

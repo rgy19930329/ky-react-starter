@@ -22,7 +22,7 @@ export default class Animate extends React.Component {
 
 	render() {
 		return (
-			<div>
+			<div className="wrap-animate">
         <h2>动画</h2>
 				<div>
 					<ul>
