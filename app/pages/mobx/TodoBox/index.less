@@ -1,0 +1,22 @@
+.todobox {
+  .todobox-ul {
+    display: none;
+    &.active {
+      display: block;
+    }
+  }
+  .todobox-li {
+    padding: 5px;
+    transition: all .3s;
+    a {
+      display: none;
+    }
+    &:hover {
+      background-color: #e6f7ff;
+      color: #1890ff;
+      a {
+        display: inline;
+      }
+    }
+  }
+}

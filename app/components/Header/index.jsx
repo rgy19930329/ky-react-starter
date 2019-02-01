@@ -20,6 +20,7 @@ export default class Header extends React.Component {
 			{ code: 'form', label: 'Form', icon: 'form' },
 			{ code: 'list', label: 'List', icon: 'ordered-list' },
 			{ code: 'animate', label: 'Animate', icon: 'shake' },
+			{ code: 'mobx', label: 'Mobx', icon: 'snippets' }
 		]
 	};
 

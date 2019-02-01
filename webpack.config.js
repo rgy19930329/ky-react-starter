@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const serverProxy = require('./serverProxy');
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -19,6 +20,7 @@ const webpackConfig = {
       '@app': path.resolve(__dirname, './app'),
       '@components': path.resolve(__dirname, './app/components'),
       '@pages': path.resolve(__dirname, './app/pages'),
+      '@stores': path.resolve(__dirname, './app/stores'),
       '@utils': path.resolve(__dirname, './app/utils'),
     }
   },
@@ -78,6 +80,9 @@ if(isDev) {
   webpackConfig.plugins.push(
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
+    new OpenBrowserPlugin({
+      url: 'http://127.0.0.1:9999'
+    }),
   );
   webpackConfig.devServer = {
     contentBase: path.resolve(__dirname, './static'),
