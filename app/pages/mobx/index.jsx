@@ -2,12 +2,21 @@ import React from 'react';
 import { Input } from 'antd';
 import Todobox from './TodoBox';
 import { observer, inject } from 'mobx-react';
+import HOCLoading from '@components/HOCLoading';
 
-@inject("todoListStore")
+@inject('todoListStore')
 @observer
+@HOCLoading('all')
 export default class Mobx extends React.Component {
 	state = {
-		task: "",
+		task: '',
+		loaded: true,
+	}
+
+	async componentDidMount() {
+		this.setState({ loaded: false });
+		await this.props.todoListStore.load();
+		this.setState({ loaded: true });
 	}
 
 	render() {

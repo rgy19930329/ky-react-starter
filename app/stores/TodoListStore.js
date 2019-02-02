@@ -4,16 +4,21 @@
  * @date 2019-2-1
  */
 
-import { observable, action } from "mobx";
+import { observable, action } from 'mobx';
+import { fetch } from '@utils';
 
 export default class TodoListStore {
-  @observable dataSource = [
-    { desc: '丝丝', status: 'unfinished' },
-    { desc: '无可奈何花落去', status: 'finished' },
-    { desc: '朝三暮四', status: 'unfinished' },
-    { desc: '飞飞', status: 'finished' },
-    { desc: '基恩', status: 'unfinished' }
-  ];
+  @observable dataSource = [];
+
+  @action
+  async load() {
+    const result = await fetch({
+      url: '/example/todolist',
+    });
+    if(result.code === '0000') {
+      this.dataSource = result.data.list;
+    }
+  }
 
   @action
   add(item) {

@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { Checkbox, Spin, Icon } from 'antd';
 import HOCLoading from '@components/HOCLoading';
 
-@HOCLoading
+@HOCLoading()
 export default class EnumCheckbox extends React.Component {
   static propTypes = {
     list: PropTypes.array, // 数据源列表

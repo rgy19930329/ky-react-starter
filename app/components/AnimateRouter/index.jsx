@@ -4,18 +4,18 @@
  * @date 2019-01-31
  */
 
-import './index.less';
-import React from 'react';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { Switch, Route, withRouter } from 'react-router-dom';
+import "./index.less";
+import React from "react";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
+import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 
-import NotFound from '@components/NotFound';
-import Home from '@pages/home';
-import Config from '@pages/config';
-import MyForm from '@pages/form';
-import List from '@pages/list';
-import Animate from '@pages/animate';
-import Mobx from '@pages/mobx';
+import NotFound from "@components/NotFound";
+import Home from "@pages/home";
+import Config from "@pages/config";
+import MyForm from "@pages/form";
+import List from "@pages/list";
+import Animate from "@pages/animate";
+import Mobx from "@pages/mobx";
 
 @withRouter
 class AnimateRouter extends React.Component {
@@ -25,7 +25,7 @@ class AnimateRouter extends React.Component {
       <TransitionGroup>
         <CSSTransition
           key={location.pathname}
-          timeout={1000}
+          timeout={300}
           classNames="message"
         >
           <Switch location={location}>
@@ -35,7 +35,8 @@ class AnimateRouter extends React.Component {
             <Route path="/form" component={MyForm} />
             <Route path="/config" component={Config} />
             <Route path="/home" component={Home} />
-            <Route path="/" exact={true} component={Home} />
+            {/* <Route path="/" exact={true} component={Home} /> */}
+            <Redirect from="/" exact={true} to="/home" />
             <Route path="*" component={NotFound} />
           </Switch>
         </CSSTransition>
