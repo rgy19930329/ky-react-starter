@@ -9,6 +9,7 @@ import React from "react";
 import { Menu, Icon, Affix, Popover, } from "antd";
 import { withRouter } from "react-router";
 import Cookie from "js-cookie";
+import { fetch } from "@utils";
 
 @withRouter
 export default class Header extends React.Component {
@@ -16,16 +17,17 @@ export default class Header extends React.Component {
 	state = {
 		current: "home",
 		navs: [
-			{ code: "home", label: "Home", icon: "home" },
-			{ code: "config", label: "Config", icon: "setting" },
-			{ code: "form", label: "Form", icon: "form" },
-			{ code: "list", label: "List", icon: "ordered-list" },
-			{ code: "animate", label: "Animate", icon: "shake" },
-			{ code: "mobx", label: "Mobx", icon: "snippets" }
+			// { code: "home", label: "Home", icon: "home" },
+			// { code: "config", label: "Config", icon: "setting" },
+			// { code: "form", label: "Form", icon: "form" },
+			// { code: "list", label: "List", icon: "ordered-list" },
+			// { code: "animate", label: "Animate", icon: "shake" },
+			// { code: "mobx", label: "Mobx", icon: "snippets" },
 		]
 	};
 
 	componentDidMount() {
+		this.getNavs();
 		this.updateActive(this.props);
 	}
 
@@ -38,6 +40,15 @@ export default class Header extends React.Component {
 		let pathList = pathname.split("/");
 		let current = pathList[0];
 		this.setState({ current });
+	}
+
+	getNavs = async () => {
+		const result = await fetch({
+			url: "/example/navs",
+		});
+		if (result.code === "0000") {
+			this.setState({ navs: result.data });
+		}
 	}
 
 	render() {

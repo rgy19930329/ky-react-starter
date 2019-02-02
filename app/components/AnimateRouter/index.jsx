@@ -8,6 +8,7 @@ import "./index.less";
 import React from "react";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
+import AuthRouter from "@components/AuthRouter";
 
 import NotFound from "@components/NotFound";
 import Home from "@pages/home";
@@ -29,7 +30,7 @@ class AnimateRouter extends React.Component {
           classNames="message"
         >
           <Switch location={location}>
-            <Route path="/mobx" component={Mobx} />
+            <AuthRouter path="/mobx" component={Mobx} />
             <Route path="/animate" component={Animate} />
             <Route path="/list" component={List} />
             <Route path="/form" component={MyForm} />

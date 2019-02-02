@@ -1,6 +1,6 @@
-import React from 'react';
-import { Spin } from 'antd';
-import { fetch } from '@utils';
+import React from "react";
+import { Spin } from "antd";
+import { fetch } from "@utils";
 
 export default class Config extends React.Component {
 	state = {
@@ -11,9 +11,9 @@ export default class Config extends React.Component {
 
 	async componentDidMount () {
 		let result = await fetch({
-			url: 'https://api.football-data.org/v2/matches',
+			url: "https://api.football-data.org/v2/matches",
 			headers: {
-				'X-Auth-Token': 'a19cd479f22d46899ff4d0ae52dc6dfc'
+				"X-Auth-Token": "a19cd479f22d46899ff4d0ae52dc6dfc"
 			}
 		});
 		const { count, filters } = result;

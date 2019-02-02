@@ -1,9 +1,9 @@
-import './index.less';
-import React from 'react';
-import { Button } from 'antd';
-import QueueAnim from 'rc-queue-anim';
-import { fetch } from '@utils';
-import { CSSTransition } from 'react-transition-group';
+import "./index.less";
+import React from "react";
+import { Button } from "antd";
+import QueueAnim from "rc-queue-anim";
+import { fetch } from "@utils";
+import { CSSTransition } from "react-transition-group";
 
 export default class Animate extends React.Component {
 	state = {

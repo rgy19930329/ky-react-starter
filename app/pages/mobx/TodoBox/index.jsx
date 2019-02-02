@@ -4,11 +4,11 @@
  * @date 2019-2-1
  */
 
-import './index.less';
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Badge, Icon } from 'antd';
-import { observer, inject } from 'mobx-react';
+import "./index.less";
+import React from "react";
+import PropTypes from "prop-types";
+import { Badge, Icon } from "antd";
+import { observer, inject } from "mobx-react";
 
 @inject("todoListStore")
 @observer
@@ -20,13 +20,13 @@ export default class TodoBox extends React.Component {
   }
 
   static defaultProps = {
-    title: '默认标题',
-    status: 'unfinished', // unfinished: 未完成 | finished: 已完成
+    title: "默认标题",
+    status: "unfinished", // unfinished: 未完成 | finished: 已完成
     isOpen: true,
   }
 
   state = {
-    isOpen: this.props.status === 'unfinished' ? true : false,
+    isOpen: this.props.status === "unfinished" ? true : false,
   }
 
   getList = () => {
@@ -47,7 +47,7 @@ export default class TodoBox extends React.Component {
         <h3 className="clearfix">
           <span style={{ marginRight: 10 }}>{title}</span>
           {status === "finished" ?
-            <Badge count={this.getList().length} style={{ backgroundColor: '#52c41a' }} /> :
+            <Badge count={this.getList().length} style={{ backgroundColor: "#52c41a" }} /> :
             <Badge count={this.getList().length} />
           }
           <a href="javascript:;" className="fr" onClick={() => {

@@ -1,21 +1,28 @@
 /**
- * 动画路由组件
+ * 根路由组件
  * @author ranguangyu
- * @date 2019-01-31
+ * @date 2019-2-2
  */
 
-import React from 'react';
-import { Route, Redirect, withRouter } from 'react-router-dom';
-import AnimateRouter from '@components/AnimateRouter';
-import Header from '@components/Header';
-import Login from '@pages/login';
-import Cookie from 'js-cookie';
+import React from "react";
+import { Route, Redirect, withRouter } from "react-router-dom";
+import AnimateRouter from "@components/AnimateRouter";
+import { observer, inject } from "mobx-react";
+import Header from "@components/Header";
+import Login from "@pages/login";
+import Cookie from "js-cookie";
 
+@inject("authStore")
+@observer
 @withRouter
 class RootRouter extends React.Component {
+  componentDidMount() {
+    this.props.authStore.load();
+  }
+
   render() {
     const location = this.props.location;
-    let token = Cookie.get('token');
+    let token = Cookie.get("token");
     if (!token) {
       return (
         <div>
@@ -24,7 +31,7 @@ class RootRouter extends React.Component {
         </div>
       )
     } else {
-      if (location.pathname === '/login') {
+      if (location.pathname === "/login") {
         return (
           <Route path="/login" component={Login} />
         )
@@ -32,7 +39,7 @@ class RootRouter extends React.Component {
         return (
           <div>
             <Header />
-            <div style={{ padding: 20 }}>
+            <div style={{ padding: 20, marginTop: 48 }}>
               <AnimateRouter />
             </div>
           </div>

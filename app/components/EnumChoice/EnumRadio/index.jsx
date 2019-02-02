@@ -4,10 +4,10 @@
  * @date 2019-01-26
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Radio } from 'antd';
-import HOCLoading from '@components/HOCLoading';
+import React from "react";
+import PropTypes from "prop-types";
+import { Radio } from "antd";
+import HOCLoading from "@components/HOCLoading";
 
 @HOCLoading()
 export default class EnumRadio extends React.Component {
@@ -21,9 +21,9 @@ export default class EnumRadio extends React.Component {
 
   static defaultProps = {
     list: [],
-    codeKey: 'code',
-    labelKey: 'name',
-    promiseCondition: '',
+    codeKey: "code",
+    labelKey: "name",
+    promiseCondition: "",
   }
 
   state = {
@@ -53,7 +53,7 @@ export default class EnumRadio extends React.Component {
     const { codeKey, labelKey } = this.props;
     const list = this.state.list || this.props.list || [];
     const radios = list.map(item => {
-      if(typeof item !== 'object') {
+      if(typeof item !== "object") {
         return (
           <Radio value={item} key={`radio-${item}`}>{item}</Radio>
         )

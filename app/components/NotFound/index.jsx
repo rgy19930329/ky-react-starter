@@ -1,10 +1,10 @@
 /**
- * Not Found页面
+ * Not Found 页面
  * @author ranguangyu
  * @date 2019-2-1
  */
 
-import React from 'react';
+import React from "react";
 
 export default class NotFound extends React.Component {
   render() {

@@ -34,7 +34,7 @@ export default class Login extends React.Component {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		return (
-			<div className="login-wrap">
+			<div className="wrap-login">
 				<h2 style={{marginBottom: 20}}>Login</h2>
 				<Form onSubmit={this.handleSubmit} className="login-form">
 					<Form.Item>

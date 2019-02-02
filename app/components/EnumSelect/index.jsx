@@ -4,10 +4,10 @@
  * @date 2019-01-25
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Select, Spin, Icon, } from 'antd';
-import debounce from 'lodash.debounce';
+import React from "react";
+import PropTypes from "prop-types";
+import { Select, Spin, Icon, } from "antd";
+import debounce from "lodash.debounce";
 
 const Option = Select.Option;
 
@@ -26,10 +26,10 @@ export default class EnumSelect extends React.Component {
 
   static defaultProps = {
     list: [],
-    codeKey: 'code',
-    labelKey: 'name',
+    codeKey: "code",
+    labelKey: "name",
     hasAll: false,
-    promiseCondition: '',
+    promiseCondition: "",
     showSearch: false,
     searchPromise: () => new Promise(resolve => resolve([])),
     searchDelay: 500,
@@ -98,7 +98,7 @@ export default class EnumSelect extends React.Component {
     const { codeKey, labelKey, hasAll } = this.props;
     const list = this.state.list || this.props.list || [];
     const options = list.map((item, index) => {
-      if (typeof item !== 'object') {
+      if (typeof item !== "object") {
         return (
           <Option value={item} key={`option-${index}`}>
             {item}

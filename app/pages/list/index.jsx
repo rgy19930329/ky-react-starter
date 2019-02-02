@@ -1,6 +1,6 @@
-import React from 'react';
-import { Table } from 'antd';
-import { fetch } from '@utils';
+import React from "react";
+import { Table } from "antd";
+import { fetch } from "@utils";
 
 export default class Home extends React.Component {
 
@@ -21,7 +21,7 @@ export default class Home extends React.Component {
 	 */
 	loadData = async (current) => {
 		const result = await fetch({
-			url: '/example/mock',
+			url: "/example/mock",
 			data: {
 				current,
 			}
@@ -42,29 +42,29 @@ export default class Home extends React.Component {
 	createColumns = () => {
 		return [
 			{
-				title: 'name',
-				dataIndex: 'name',
-				key: 'name',
+				title: "name",
+				dataIndex: "name",
+				key: "name",
 			},
 			{
-				title: 'email',
-				dataIndex: 'email',
-				key: 'email',
+				title: "email",
+				dataIndex: "email",
+				key: "email",
 			},
 			{
-				title: 'address',
-				dataIndex: 'address',
-				key: 'address',
+				title: "address",
+				dataIndex: "address",
+				key: "address",
 			},
 			{
-				title: 'string',
-				dataIndex: 'string',
-				key: 'string',
+				title: "string",
+				dataIndex: "string",
+				key: "string",
 			},
 			{
-				title: 'age',
-				dataIndex: 'number',
-				key: 'number',
+				title: "age",
+				dataIndex: "number",
+				key: "number",
 			}
 		];
 	};
@@ -96,7 +96,7 @@ export default class Home extends React.Component {
 					dataSource={this.state.dataSource}
 					pagination={this.createPagination()}
 					loading={!this.state.loaded}
-					locale={{ emptyText: '暂无数据' }}
+					locale={{ emptyText: "暂无数据" }}
 				/>
 			</div>
 		)

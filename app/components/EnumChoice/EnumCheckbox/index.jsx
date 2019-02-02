@@ -4,10 +4,10 @@
  * @date 2019-01-27
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Checkbox, Spin, Icon } from 'antd';
-import HOCLoading from '@components/HOCLoading';
+import React from "react";
+import PropTypes from "prop-types";
+import { Checkbox, Spin, Icon } from "antd";
+import HOCLoading from "@components/HOCLoading";
 
 @HOCLoading()
 export default class EnumCheckbox extends React.Component {
@@ -21,9 +21,9 @@ export default class EnumCheckbox extends React.Component {
 
   static defaultProps = {
     list: [],
-    codeKey: 'code',
-    labelKey: 'name',
-    promiseCondition: '',
+    codeKey: "code",
+    labelKey: "name",
+    promiseCondition: "",
   }
 
   state = {
@@ -55,7 +55,7 @@ export default class EnumCheckbox extends React.Component {
     const { codeKey, labelKey } = this.props;
     const list = this.state.list || this.props.list || [];
     const checkboxs = list.map(item => {
-      if(typeof item !== 'object') {
+      if(typeof item !== "object") {
         return (
           <Checkbox value={item} key={`checkbox-${item}`}>{item}</Checkbox>
         )

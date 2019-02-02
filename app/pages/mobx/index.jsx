@@ -1,15 +1,15 @@
-import React from 'react';
-import { Input } from 'antd';
-import Todobox from './TodoBox';
-import { observer, inject } from 'mobx-react';
-import HOCLoading from '@components/HOCLoading';
+import React from "react";
+import { Input } from "antd";
+import Todobox from "./TodoBox";
+import { observer, inject } from "mobx-react";
+import HOCLoading from "@components/HOCLoading";
 
-@inject('todoListStore')
+@inject("todoListStore")
 @observer
-@HOCLoading('all')
+@HOCLoading("all")
 export default class Mobx extends React.Component {
 	state = {
-		task: '',
+		task: "",
 		loaded: true,
 	}
 
