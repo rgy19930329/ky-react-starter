@@ -17,6 +17,7 @@ import MyForm from "@pages/form";
 import List from "@pages/list";
 import Animate from "@pages/animate";
 import Mobx from "@pages/mobx";
+import MyEcharts from "@pages/echarts";
 
 @withRouter
 class AnimateRouter extends React.Component {
@@ -30,12 +31,13 @@ class AnimateRouter extends React.Component {
           classNames="message"
         >
           <Switch location={location}>
+            <AuthRouter path="/echarts" component={MyEcharts} />
             <AuthRouter path="/mobx" component={Mobx} />
-            <Route path="/animate" component={Animate} />
-            <Route path="/list" component={List} />
-            <Route path="/form" component={MyForm} />
-            <Route path="/config" component={Config} />
-            <Route path="/home" component={Home} />
+            <AuthRouter path="/animate" component={Animate} />
+            <AuthRouter path="/list" component={List} />
+            <AuthRouter path="/form" component={MyForm} />
+            <AuthRouter path="/config" component={Config} />
+            <AuthRouter path="/home" component={Home} />
             {/* <Route path="/" exact={true} component={Home} /> */}
             <Redirect from="/" exact={true} to="/home" />
             <Route path="*" component={NotFound} />

@@ -16,14 +16,7 @@ export default class Header extends React.Component {
 
 	state = {
 		current: "home",
-		navs: [
-			// { code: "home", label: "Home", icon: "home" },
-			// { code: "config", label: "Config", icon: "setting" },
-			// { code: "form", label: "Form", icon: "form" },
-			// { code: "list", label: "List", icon: "ordered-list" },
-			// { code: "animate", label: "Animate", icon: "shake" },
-			// { code: "mobx", label: "Mobx", icon: "snippets" },
-		]
+		navs: [],
 	};
 
 	componentDidMount() {
@@ -78,7 +71,7 @@ export default class Header extends React.Component {
 								content={<a href="javascript:;" onClick={() => {
 									Cookie.remove("userName");
 									Cookie.remove("token");
-									location.hash = "/login";
+									location.href = "/";
 								}}>Logout</a>}
 							>
 								{Cookie.get("userName")}

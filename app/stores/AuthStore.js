@@ -15,7 +15,6 @@ export default class AuthStore {
     const result = await fetch({
       url: "/example/resource",
     });
-    console.log(result);
     if(result.code === "0000") {
       this.authList = result.data;
     }

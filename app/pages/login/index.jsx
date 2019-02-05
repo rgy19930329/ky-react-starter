@@ -14,7 +14,6 @@ export default class Login extends React.Component {
 		e.preventDefault();
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
-				console.log("Received values of form: ", values);
 				this.setState({ loaded: false });
 				const result = await fetch({
 					url: "/example/login",
@@ -25,7 +24,7 @@ export default class Login extends React.Component {
 					const { token, userName } = result.data;
 					Cookie.set("token", token);
 					Cookie.set("userName", userName);
-					location.hash = "/";
+					location.href = "/";
 				}
       }
     });

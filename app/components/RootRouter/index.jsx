@@ -12,9 +12,9 @@ import Header from "@components/Header";
 import Login from "@pages/login";
 import Cookie from "js-cookie";
 
+@withRouter
 @inject("authStore")
 @observer
-@withRouter
 class RootRouter extends React.Component {
   componentDidMount() {
     this.props.authStore.load();
