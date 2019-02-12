@@ -8,10 +8,13 @@ import "./index.less";
 import React from "react";
 import { Menu, Icon, Affix, Popover, } from "antd";
 import { withRouter } from "react-router";
+import { observer, inject } from "mobx-react";
 import Cookie from "js-cookie";
 import { fetch } from "@utils";
 
 @withRouter
+@inject("authStore")
+@observer
 export default class Header extends React.Component {
 
 	state = {
@@ -29,10 +32,34 @@ export default class Header extends React.Component {
 	}
 
 	updateActive = (props) => {
-		let pathname = props.location.pathname.slice(1);
-		let pathList = pathname.split("/");
-		let current = pathList[0];
+		const pathname = props.location.pathname;
+		const { authList } = props.authStore;
+		let current = pathname.slice(1);
+		for (let i = 0, len = authList.length; i < len; i++) {
+			if (pathname === authList[i].path) {
+				current = pathname.slice(1);
+				break;
+			} else if (this.routerMatch(pathname, authList[i].path)) {
+				current = authList[i].parentPath.slice(1);
+				break;
+			}
+		}
 		this.setState({ current });
+	}
+
+	/**
+	 * 路由匹配
+	 * @param {String} currentPath 当前路由 /detail/123456
+	 * @param {String} targetPath 目标路由规则 /detail/:id
+	 * @return {Boolean}
+	 */
+	routerMatch = (currentPath, targetPath) => {
+		const rule = targetPath.replace(/:\w+/, "\\w+");
+		const regx = new RegExp(`^${rule}$`);
+		if (currentPath.match(regx)) {
+			return true;
+		}
+		return false;
 	}
 
 	getNavs = async () => {
@@ -65,7 +92,7 @@ export default class Header extends React.Component {
 					</Menu>
 					{Cookie.get("userName") &&
 						<div className="user-info">
-							<Icon type="user" style={{marginRight: 5}} />
+							<Icon type="user" style={{ marginRight: 5 }} />
 							<Popover
 								placement="bottom"
 								content={<a href="javascript:;" onClick={() => {

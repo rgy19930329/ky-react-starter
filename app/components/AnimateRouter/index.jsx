@@ -15,6 +15,7 @@ import Home from "@pages/home";
 import Config from "@pages/config";
 import MyForm from "@pages/form";
 import List from "@pages/list";
+import ListDetail from "@pages/list/detail";
 import Animate from "@pages/animate";
 import Mobx from "@pages/mobx";
 import MyEcharts from "@pages/echarts";
@@ -34,6 +35,7 @@ class AnimateRouter extends React.Component {
             <AuthRouter path="/echarts" component={MyEcharts} />
             <AuthRouter path="/mobx" component={Mobx} />
             <AuthRouter path="/animate" component={Animate} />
+            <AuthRouter path="/detail/:id" component={ListDetail} />
             <AuthRouter path="/list" component={List} />
             <AuthRouter path="/form" component={MyForm} />
             <AuthRouter path="/config" component={Config} />

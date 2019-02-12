@@ -39,7 +39,7 @@ class RootRouter extends React.Component {
         return (
           <div>
             <Header />
-            <div style={{ padding: 20, marginTop: 48 }}>
+            <div style={{ padding: 20 }}>
               <AnimateRouter />
             </div>
           </div>

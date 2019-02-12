@@ -16,7 +16,7 @@ class AuthRouter extends React.Component {
     const currentPath = this.props.path;
     const authList = this.props.authStore.authList;
     for (let i = 0, len = authList.length; i < len; i++) {
-      if (this.routerMatch(currentPath, authList[i].code)) {
+      if (this.routerMatch(currentPath, authList[i].path)) {
         return true;
       }
     }

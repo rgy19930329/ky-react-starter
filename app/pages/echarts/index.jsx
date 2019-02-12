@@ -16,7 +16,7 @@ export default class MyEcharts extends React.Component {
 			legend: {
 				orient: 'vertical',
 				x: 'left',
-				data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+				// data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
 			},
 			toolbox: {
 				show: true,

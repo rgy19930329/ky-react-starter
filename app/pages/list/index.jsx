@@ -2,7 +2,7 @@ import React from "react";
 import { Table } from "antd";
 import { fetch } from "@utils";
 
-export default class Home extends React.Component {
+export default class List extends React.Component {
 
 	state = {
 		dataSource: [],
@@ -45,6 +45,10 @@ export default class Home extends React.Component {
 				title: "name",
 				dataIndex: "name",
 				key: "name",
+				render: (value, record) => {
+					const { id } = record;
+					return <a href={`#/detail/${id}`}>{value}</a>
+				}
 			},
 			{
 				title: "email",
