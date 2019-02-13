@@ -26,7 +26,9 @@ export default class Header extends React.Component {
 
 	componentDidMount() {
 		this.getNavs();
-		this.updateActive(this.props);
+		this.pollAuthList(() => {
+			this.updateActive(this.props);
+		});
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -37,23 +39,32 @@ export default class Header extends React.Component {
 		const pathname = props.location.pathname;
 		const { authList } = props.authStore;
 		let current = pathname.slice(1);
-		if (authList.length === 0) {
-			this.timer = setInterval(() => {
-				this.updateActive(props);
-			}, 300);
-			return;
-		} else {
-			this.timer && clearInterval(this.timer);
-			for (let i = 0, len = authList.length; i < len; i++) {
-				if (pathname === authList[i].path) {
-					current = pathname.slice(1);
-					break;
-				} else if (this.routerMatch(pathname, authList[i].path)) {
-					current = authList[i].parentPath.slice(1);
-					break;
-				}
+		for (let i = 0, len = authList.length; i < len; i++) {
+			if (pathname === authList[i].path) {
+				current = pathname.slice(1);
+				break;
+			} else if (this.routerMatch(pathname, authList[i].path)) {
+				current = authList[i].parentPath.slice(1);
+				break;
 			}
-			this.setState({ current });
+		}
+		this.setState({ current });
+	}
+
+	/**
+	 * 轮询权限列表
+	 */
+	pollAuthList = (callback) => {
+		const { authList } = this.props.authStore;
+		if (authList.length === 0) {
+			if (this.timer === null) {
+				this.timer = setInterval(() => {
+					this.pollAuthList(callback);
+				}, 300);
+			}
+		} else {
+			clearInterval(this.timer);
+			callback && callback();
 		}
 	}
 
