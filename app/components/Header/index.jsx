@@ -22,6 +22,8 @@ export default class Header extends React.Component {
 		navs: [],
 	};
 
+	timer = null;
+
 	componentDidMount() {
 		this.getNavs();
 		this.updateActive(this.props);
@@ -35,16 +37,24 @@ export default class Header extends React.Component {
 		const pathname = props.location.pathname;
 		const { authList } = props.authStore;
 		let current = pathname.slice(1);
-		for (let i = 0, len = authList.length; i < len; i++) {
-			if (pathname === authList[i].path) {
-				current = pathname.slice(1);
-				break;
-			} else if (this.routerMatch(pathname, authList[i].path)) {
-				current = authList[i].parentPath.slice(1);
-				break;
+		if (authList.length === 0) {
+			this.timer = setInterval(() => {
+				this.updateActive(props);
+			}, 300);
+			return;
+		} else {
+			this.timer && clearInterval(this.timer);
+			for (let i = 0, len = authList.length; i < len; i++) {
+				if (pathname === authList[i].path) {
+					current = pathname.slice(1);
+					break;
+				} else if (this.routerMatch(pathname, authList[i].path)) {
+					current = authList[i].parentPath.slice(1);
+					break;
+				}
 			}
+			this.setState({ current });
 		}
-		this.setState({ current });
 	}
 
 	/**
