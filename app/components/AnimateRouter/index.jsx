@@ -19,6 +19,7 @@ import ListDetail from "@pages/list/detail";
 import Animate from "@pages/animate";
 import Mobx from "@pages/mobx";
 import MyEcharts from "@pages/echarts";
+import PageEditTable from "@pages/edit-table";
 
 @withRouter
 class AnimateRouter extends React.Component {
@@ -32,6 +33,7 @@ class AnimateRouter extends React.Component {
           classNames="message"
         >
           <Switch location={location}>
+            <AuthRouter path="/edit-table" component={PageEditTable} />
             <AuthRouter path="/echarts" component={MyEcharts} />
             <AuthRouter path="/mobx" component={Mobx} />
             <AuthRouter path="/animate" component={Animate} />
