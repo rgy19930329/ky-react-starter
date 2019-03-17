@@ -10,7 +10,11 @@ import { Form, Table, Icon, Input } from "antd";
 import uniqueId from "uniqueid";
 const rowUuid = uniqueId("rowKey_");
 
-@Form.create()
+@Form.create({
+  // onValuesChange: (props, changedValues, allValues) => {
+  //   console.log(changedValues, allValues);
+  // }
+})
 export default class EditTable extends React.Component {
   static propTypes = {
     dataSource: PropTypes.array, // 数据源
@@ -30,7 +34,7 @@ export default class EditTable extends React.Component {
       dataSource: props.dataSource || [],
     }
 
-    this.newProps = Object.assign({}, this.props);
+    // this.newProps = Object.assign({}, this.props);
 
     this.createForm();
 
@@ -43,24 +47,34 @@ export default class EditTable extends React.Component {
    * 生成表单
    */
   createForm = () => {
-    const { columns } = this.props;
-    columns.forEach(cell => {
-      if(!cell.render) {
-        if(cell.editable) {
-          cell.option = cell.option || {};
-          cell.render = (text, record) => {
-            if (cell.component) {
-              return (
-                <cell.component {...cell.options} />
-              )
-            } else {
-              return (
-                <Input {...cell.options}/>
-              )
-            }
+    const {
+      getFieldDecorator,
+      setFieldsValue,
+      getFieldsValue,
+      getFieldValue,
+    } = this.props.form;
+    let { columns } = this.props;
+    columns = columns.map(cell => {
+      if (!cell.render) {
+        cell.options = cell.options || {};
+        cell.decorator = cell.decorator || {};
+        cell.component = cell.component || Input;
+        cell.render = (text, record, index) => {
+          const fieldKey = `row_${index}_${cell.dataIndex}`;
+          if (cell.component) {
+            return (
+              <div className="edit-cell">
+                {getFieldDecorator(fieldKey, {
+                  ...cell.decorator,
+                })(
+                  <cell.component {...cell.options} />
+                )}
+              </div>
+            )
           }
         }
       }
+      return cell;
     });
   }
 
@@ -80,7 +94,7 @@ export default class EditTable extends React.Component {
         )
       }
     });
-    this.newProps["columns"] = columns;
+    // this.newProps["columns"] = columns;
   }
 
   /**
@@ -95,13 +109,13 @@ export default class EditTable extends React.Component {
       width: 65,
       render: (text, record, index) => {
         return (
-          <div style={{textAlign: "center"}}>
+          <div style={{ textAlign: "center" }}>
             <a onClick={() => this.delRow(index)}>删除</a>
           </div>
         )
       }
     });
-    this.newProps["columns"] = columns;
+    // this.newProps["columns"] = columns;
   }
 
   /**
@@ -138,23 +152,32 @@ export default class EditTable extends React.Component {
   }
 
   render() {
+    const { getFieldDecorator } = this.props.form;
+    console.log('render');
     return (
       <div>
         <Table
-          {...this.newProps}
+          {...this.props}
           dataSource={this.state.dataSource}
           rowKey={record => rowUuid()}
           pagination={false}
           bordered={true}
+          locale={{emptyText: <div><Icon type="frown" /> 暂无数据</div>}}
         />
-        <div style={{textAlign: "right"}}>
+        <div style={{ textAlign: "right" }}>
           <a
             onClick={this.addRow}
-            style={{fontSize: 20, lineHeight: "36px", padding: 22}}
+            style={{ fontSize: 20, lineHeight: "36px", padding: 22 }}
           >
             <Icon type="plus-circle" />
           </a>
         </div>
+        {getFieldDecorator("name")(
+          <Input />
+        )}
+        <div><a onClick={() => {
+          console.log(this.props.form.getFieldsValue());
+        }}>press</a></div>
       </div>
     )
   }
