@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import { Form, Table, Icon, Input } from "antd";
 import uniqueId from "uniqueid";
 const rowUuid = uniqueId("rowKey_");
+import { getValueFromEvent } from "rc-form/lib/utils";
 
 @Form.create({
   // onValuesChange: (props, changedValues, allValues) => {
@@ -34,13 +35,11 @@ export default class EditTable extends React.Component {
       dataSource: props.dataSource || [],
     }
 
-    // this.newProps = Object.assign({}, this.props);
-
     this.createForm();
 
-    this.createOperate();
+    // this.createOperate();
 
-    props.hasSN && this.createSN();
+    // props.hasSN && this.createSN();
   }
 
   /**
@@ -55,28 +54,100 @@ export default class EditTable extends React.Component {
     } = this.props.form;
     let { columns } = this.props;
     columns = columns.map(cell => {
-      if (!cell.render) {
-        cell.options = cell.options || {};
-        cell.decorator = cell.decorator || {};
-        cell.component = cell.component || Input;
-        cell.render = (text, record, index) => {
-          const fieldKey = `row_${index}_${cell.dataIndex}`;
-          if (cell.component) {
-            return (
-              <div className="edit-cell">
-                {getFieldDecorator(fieldKey, {
-                  ...cell.decorator,
-                })(
-                  <cell.component {...cell.options} />
-                )}
-              </div>
-            )
-          }
-        }
-      }
+      // if (!cell.render) {
+      //   cell.options = cell.options || {};
+      //   cell.decorator = cell.decorator || {};
+      //   cell.component = cell.component || Input;
+      //   cell.render = (text, record, index) => {
+      //     const fieldKey = `row_${index}_${cell.dataIndex}`;
+      //     return (
+      //       <div className="edit-cell">
+      //         {getFieldDecorator(fieldKey, {
+      //           ...cell.decorator,
+      //         })(
+      //           <cell.component {...cell.options} />
+      //         )}
+      //       </div>
+      //     )
+      //   }
+      // }
+      cell.render = (text, record, index) => {
+        console.log(text);
+        const fieldKey = `row_${index}_${cell.dataIndex}`;
+        return (
+          <div className="edit-cell">
+            {getFieldDecorator(fieldKey, {
+              initialValue: text,
+            })(
+              <Input />
+            )}
+          </div>
+        )
+      };
       return cell;
     });
   }
+
+  getColumns = () => {
+    const {
+      getFieldDecorator,
+      getFieldProps,
+      setFieldsValue,
+      getFieldsValue,
+    } = this.props.form;
+    let { columns, onChange } = this.props;
+    let { dataSource } = this.state;
+    columns = columns.map(cell => {
+      return {
+        ...cell,
+        render: (text, record, index) => {
+          const fieldKey = `row_${index}_${cell.dataIndex}`;
+          return (
+            <div className="edit-cell">
+              {/* {getFieldDecorator(fieldKey, {
+                initialValue: text,
+                getValueFromEvent: (...args) => {
+                  console.log(args);
+                  return "ssss";
+                }
+              })(
+                <Input />
+              )} */}
+              <Input {...getFieldProps(fieldKey, {
+                initialValue: text,
+                getValueFromEvent: (...args) => {
+                  console.log(getValueFromEvent(...args));
+                  this.updateDataSource(fieldKey, getValueFromEvent(...args));
+                  onChange && onChange(dataSource, { index, type: "edit" })
+                  return getValueFromEvent(...args);
+                }
+              })}/>
+            </div>
+          )
+        }
+      }
+    });
+    return columns;
+  }
+
+  updateDataSource = (currentFieldKey, value) => {
+    let source = this.props.form.getFieldsValue();
+    // source = source.map(item => {
+    //   console.log(item);
+    //   return item;
+    // });
+    let { dataSource } = this.state;
+    for(let fieldKey in source) {
+      let [_, index, key] = fieldKey.split("_");
+      if (currentFieldKey === fieldKey) {
+        dataSource[index][key] = value;
+      } else {
+        dataSource[index][key] = source[fieldKey];
+      }
+    }
+    this.setState({ dataSource });
+  }
+
 
   /**
    * 支持序号
@@ -94,7 +165,6 @@ export default class EditTable extends React.Component {
         )
       }
     });
-    // this.newProps["columns"] = columns;
   }
 
   /**
@@ -115,7 +185,6 @@ export default class EditTable extends React.Component {
         )
       }
     });
-    // this.newProps["columns"] = columns;
   }
 
   /**
@@ -157,7 +226,7 @@ export default class EditTable extends React.Component {
     return (
       <div>
         <Table
-          {...this.props}
+          columns={this.getColumns()}
           dataSource={this.state.dataSource}
           rowKey={record => rowUuid()}
           pagination={false}
@@ -172,9 +241,9 @@ export default class EditTable extends React.Component {
             <Icon type="plus-circle" />
           </a>
         </div>
-        {getFieldDecorator("name")(
+        {/* {getFieldDecorator("name")(
           <Input />
-        )}
+        )} */}
         <div><a onClick={() => {
           console.log(this.props.form.getFieldsValue());
         }}>press</a></div>

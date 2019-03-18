@@ -8,7 +8,9 @@ export default class PageEditTable extends React.Component {
 		super(props);
 
 		this.state = {
-			dataSource: [],
+			dataSource: [
+				{ name: "rgy", sex: "男", birthday: "1993-03-29" }
+			],
 		}
 	}
 
@@ -33,7 +35,6 @@ export default class PageEditTable extends React.Component {
 				title: "出生日期",
 				dataIndex: "birthday",
 				key: "birthday",
-				editable: false,
 				component: DatePicker,
 			},
 		];
@@ -48,7 +49,7 @@ export default class PageEditTable extends React.Component {
 					columns={this.createColumns()}
 					dataSource={this.state.dataSource}
 					onChange={(list, { index, record, type, }) => {
-						// console.log(list, record, index, type);
+						console.log(list, record, index, type);
 					}}
 				/>
 			</div>
