@@ -48,8 +48,9 @@ export default class PageEditTable extends React.Component {
 					hasSN={true}
 					columns={this.createColumns()}
 					dataSource={this.state.dataSource}
-					onChange={(list, { index, record, type, }) => {
-						console.log(list, record, index, type);
+					onChange={(dataSource, { index, record, type, }) => {
+						console.log(dataSource, record, index, type);
+						this.setState({ dataSource });
 					}}
 				/>
 			</div>
