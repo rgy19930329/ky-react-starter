@@ -64,9 +64,8 @@ export default class EditTable extends React.Component {
                 {...getFieldProps(fieldKey, {
                   initialValue: text,
                   getValueFromEvent: (...args) => {
-                    console.log(getValueFromEvent(...args));
-                    this.updateDataSource(fieldKey, getValueFromEvent(...args));
-                    onChange && onChange([...dataSource], { index, type: "edit" })
+                    this.update(fieldKey, getValueFromEvent(...args));
+                    onChange && onChange(dataSource, { index, type: "edit" })
                     return getValueFromEvent(...args);
                   }
                 })}
@@ -79,7 +78,7 @@ export default class EditTable extends React.Component {
     return columns;
   }
 
-  updateDataSource = (currentFieldKey, value) => {
+  update = (currentFieldKey, value) => {
     let source = this.props.form.getFieldsValue();
     let { dataSource } = this.state;
     for (let fieldKey in source) {
