@@ -1,9 +1,10 @@
 import React from "react";
-import { DatePicker } from "antd";
+import { Form, DatePicker } from "antd";
 import EnumSelect from "@components/EnumSelect";
 import EditTable from "@components/EditTable";
 
-export default class PageEditTable extends React.Component {
+@Form.create()
+class PageEditTable extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -50,9 +51,12 @@ export default class PageEditTable extends React.Component {
 					dataSource={this.state.dataSource}
 					onChange={(list, { index, record, type, }) => {
 						console.log(list, record, index, type);
+						this.setState({ dataSource: list });
 					}}
 				/>
 			</div>
 		)
 	}
 }
+
+export default PageEditTable;

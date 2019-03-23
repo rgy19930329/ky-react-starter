@@ -11,11 +11,11 @@ import uniqueId from "uniqueid";
 const rowUuid = uniqueId("rowKey_");
 import { getValueFromEvent } from "rc-form/lib/utils";
 
-@Form.create({
-  // onValuesChange: (props, changedValues, allValues) => {
-  //   console.log(changedValues, allValues);
-  // }
-})
+// @Form.create({
+//   // onValuesChange: (props, changedValues, allValues) => {
+//   //   console.log(changedValues, allValues);
+//   // }
+// })
 export default class EditTable extends React.Component {
   static propTypes = {
     dataSource: PropTypes.array, // 数据源
@@ -33,68 +33,21 @@ export default class EditTable extends React.Component {
 
     this.state = {
       dataSource: props.dataSource || [],
+      data: {}, // 搜集数据
     }
-
-    this.createForm();
 
     // this.createOperate();
 
     // props.hasSN && this.createSN();
   }
 
-  /**
-   * 生成表单
-   */
-  createForm = () => {
-    const {
-      getFieldDecorator,
-      setFieldsValue,
-      getFieldsValue,
-      getFieldValue,
-    } = this.props.form;
-    let { columns } = this.props;
-    columns = columns.map(cell => {
-      // if (!cell.render) {
-      //   cell.options = cell.options || {};
-      //   cell.decorator = cell.decorator || {};
-      //   cell.component = cell.component || Input;
-      //   cell.render = (text, record, index) => {
-      //     const fieldKey = `row_${index}_${cell.dataIndex}`;
-      //     return (
-      //       <div className="edit-cell">
-      //         {getFieldDecorator(fieldKey, {
-      //           ...cell.decorator,
-      //         })(
-      //           <cell.component {...cell.options} />
-      //         )}
-      //       </div>
-      //     )
-      //   }
-      // }
-      cell.render = (text, record, index) => {
-        console.log(text);
-        const fieldKey = `row_${index}_${cell.dataIndex}`;
-        return (
-          <div className="edit-cell">
-            {getFieldDecorator(fieldKey, {
-              initialValue: text,
-            })(
-              <Input />
-            )}
-          </div>
-        )
-      };
-      return cell;
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      dataSource: nextProps.dataSource,
     });
   }
 
   getColumns = () => {
-    const {
-      getFieldDecorator,
-      getFieldProps,
-      setFieldsValue,
-      getFieldsValue,
-    } = this.props.form;
     let { columns, onChange } = this.props;
     let { dataSource } = this.state;
     columns = columns.map(cell => {
@@ -102,27 +55,31 @@ export default class EditTable extends React.Component {
         ...cell,
         render: (text, record, index) => {
           const fieldKey = `row_${index}_${cell.dataIndex}`;
+          const { data } = this.state;
+          data[fieldKey] = text;
           return (
-            <div className="edit-cell">
-              {/* {getFieldDecorator(fieldKey, {
-                initialValue: text,
-                getValueFromEvent: (...args) => {
-                  console.log(args);
-                  return "ssss";
-                }
-              })(
-                <Input />
-              )} */}
-              <Input {...getFieldProps(fieldKey, {
-                initialValue: text,
-                getValueFromEvent: (...args) => {
-                  console.log(getValueFromEvent(...args));
-                  this.updateDataSource(fieldKey, getValueFromEvent(...args));
-                  onChange && onChange(dataSource, { index, type: "edit" })
-                  return getValueFromEvent(...args);
-                }
-              })}/>
-            </div>
+            // <Input {...getFieldProps(fieldKey, {
+            //   initialValue: text,
+            //   getValueFromEvent: (...args) => {
+            //     console.log(getValueFromEvent(...args));
+            //     // this.updateDataSource(fieldKey, getValueFromEvent(...args));
+            //     onChange && onChange(dataSource, { index, type: "edit" });
+            //     return getValueFromEvent(...args);
+            //   }
+            // })}/>
+            <Input
+              defaultValue={data[fieldKey]}
+              // onChange={(e) => {
+              //   let value = data[fieldKey] = e.target.value;
+              //   this.updateDataSource(fieldKey, value);
+              //   onChange && onChange(dataSource, { index, type: "edit" });
+              // }}
+              onInput={(e) => {
+                let value = data[fieldKey] = e.target.value;
+                this.updateDataSource(fieldKey, value);
+                onChange && onChange(dataSource, { index, type: "edit" });
+              }}
+            />
           )
         }
       }
@@ -131,18 +88,14 @@ export default class EditTable extends React.Component {
   }
 
   updateDataSource = (currentFieldKey, value) => {
-    let source = this.props.form.getFieldsValue();
-    // source = source.map(item => {
-    //   console.log(item);
-    //   return item;
-    // });
+    const { data } = this.state;
+    let source = data;
     let { dataSource } = this.state;
     for(let fieldKey in source) {
+      console.log(fieldKey)
       let [_, index, key] = fieldKey.split("_");
       if (currentFieldKey === fieldKey) {
         dataSource[index][key] = value;
-      } else {
-        dataSource[index][key] = source[fieldKey];
       }
     }
     this.setState({ dataSource });
@@ -221,12 +174,52 @@ export default class EditTable extends React.Component {
   }
 
   render() {
-    const { getFieldDecorator } = this.props.form;
-    console.log('render');
+    // const { getFieldDecorator } = this.props.form;
+    // console.log('render');
+
+    let { columns, onChange } = this.props;
+    let { dataSource } = this.state;
+    let myColumns = columns.map((cell, index) => {
+      return {
+        ...cell,
+        render: (text, record, index) => {
+          const fieldKey = `row_${index}_${cell.dataIndex}`;
+          const { data } = this.state;
+          data[fieldKey] = text;
+          return (
+            // <Input {...getFieldProps(fieldKey, {
+            //   initialValue: text,
+            //   getValueFromEvent: (...args) => {
+            //     console.log(getValueFromEvent(...args));
+            //     // this.updateDataSource(fieldKey, getValueFromEvent(...args));
+            //     onChange && onChange(dataSource, { index, type: "edit" });
+            //     return getValueFromEvent(...args);
+            //   }
+            // })}/>
+            <Input
+              key={fieldKey}
+              defaultValue={data[fieldKey]}
+              onChange={(e) => {
+                this.updateDataSource(fieldKey, e.target.value);
+                onChange && onChange(dataSource, { index, type: "edit" });
+              }}
+              // onBlur={(e) => {
+              //   // let value = data[fieldKey] = e.target.value;
+              //   this.updateDataSource(fieldKey, e.target.value);
+              //   onChange && onChange(dataSource, { index, type: "edit" });
+              // }}
+            />
+          )
+        }
+      }
+    });
+
+    console.log(myColumns);
+
     return (
       <div>
         <Table
-          columns={this.getColumns()}
+          columns={myColumns}
           dataSource={this.state.dataSource}
           rowKey={record => rowUuid()}
           pagination={false}
@@ -245,7 +238,7 @@ export default class EditTable extends React.Component {
           <Input />
         )} */}
         <div><a onClick={() => {
-          console.log(this.props.form.getFieldsValue());
+          console.log(this.state.data);
         }}>press</a></div>
       </div>
     )
