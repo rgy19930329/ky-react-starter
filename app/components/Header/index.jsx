@@ -35,6 +35,9 @@ export default class Header extends React.Component {
 		this.updateActive(nextProps);
 	}
 
+	/**
+	 * 导航高亮
+	 */
 	updateActive = (props) => {
 		const pathname = props.location.pathname;
 		const { authList } = props.authStore;
@@ -69,7 +72,7 @@ export default class Header extends React.Component {
 	}
 
 	/**
-	 * 路由匹配
+	 * 路由匹配规则
 	 * @param {String} currentPath 当前路由 /detail/123456
 	 * @param {String} targetPath 目标路由规则 /detail/:id
 	 * @return {Boolean}

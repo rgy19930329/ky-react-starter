@@ -2,6 +2,7 @@ import React from "react";
 import { Form, DatePicker } from "antd";
 import EnumSelect from "@components/EnumSelect";
 import EditTable from "@components/EditTable";
+import moment from "moment";
 
 @Form.create()
 class PageEditTable extends React.Component {
@@ -27,16 +28,41 @@ class PageEditTable extends React.Component {
 				dataIndex: "sex",
 				key: "sex",
 				component: EnumSelect,
-				options: {
-					style: { width: 100 },
-					list: ["男", "女"],
-				},
+				render: (text, record, index, getProps) => {
+					return (
+						<EnumSelect
+							style={{width: 100}}
+							list={["男", "女"]}
+							{...getProps({
+								rules: [
+									{ required: true },
+								],
+							})}
+						/>
+					)
+				}
 			},
 			{
 				title: "出生日期",
 				dataIndex: "birthday",
 				key: "birthday",
-				component: DatePicker,
+				render: (text, record, index, getProps) => {
+					console.log(text);
+					let opts = text ? {
+						initialValue: moment(text),
+					} : {};
+					return (
+						<DatePicker
+							{...getProps({
+								...opts,
+								// getValueFromEvent: (value) => {
+								// 	console.log(moment(value).format("YYYY-MM-DD"));
+								// 	return moment(value).format("YYYY-MM-DD");
+								// }
+							})}
+						/>
+					)
+				}
 			},
 		];
 	}
@@ -49,9 +75,9 @@ class PageEditTable extends React.Component {
 					hasSN={true}
 					columns={this.createColumns()}
 					dataSource={this.state.dataSource}
-					onChange={(list, { index, record, type, }) => {
-						console.log(list, record, index, type);
-						this.setState({ dataSource: list });
+					onChange={(dataSource, { index, record, type, }) => {
+						console.log(dataSource, record, index, type);
+						this.setState({ dataSource });
 					}}
 				/>
 			</div>

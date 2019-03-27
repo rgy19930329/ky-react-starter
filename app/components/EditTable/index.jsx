@@ -7,15 +7,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Form, Table, Icon, Input } from "antd";
-import uniqueId from "uniqueid";
-const rowUuid = uniqueId("rowKey_");
 import { getValueFromEvent } from "rc-form/lib/utils";
 
-// @Form.create({
-//   // onValuesChange: (props, changedValues, allValues) => {
-//   //   console.log(changedValues, allValues);
-//   // }
-// })
+@Form.create()
 export default class EditTable extends React.Component {
   static propTypes = {
     dataSource: PropTypes.array, // 数据源
@@ -33,80 +27,89 @@ export default class EditTable extends React.Component {
 
     this.state = {
       dataSource: props.dataSource || [],
-      data: {}, // 搜集数据
     }
-
-    // this.createOperate();
-
-    // props.hasSN && this.createSN();
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     this.setState({
-      dataSource: nextProps.dataSource,
+      dataSource: nextProps.dataSource
     });
   }
 
   getColumns = () => {
-    let { columns, onChange } = this.props;
+    let { form: { getFieldProps }, columns } = this.props;
     let { dataSource } = this.state;
     columns = columns.map(cell => {
-      return {
-        ...cell,
-        render: (text, record, index) => {
-          const fieldKey = `row_${index}_${cell.dataIndex}`;
-          const { data } = this.state;
-          data[fieldKey] = text;
-          return (
-            // <Input {...getFieldProps(fieldKey, {
-            //   initialValue: text,
-            //   getValueFromEvent: (...args) => {
-            //     console.log(getValueFromEvent(...args));
-            //     // this.updateDataSource(fieldKey, getValueFromEvent(...args));
-            //     onChange && onChange(dataSource, { index, type: "edit" });
-            //     return getValueFromEvent(...args);
-            //   }
-            // })}/>
-            <Input
-              defaultValue={data[fieldKey]}
-              // onChange={(e) => {
-              //   let value = data[fieldKey] = e.target.value;
-              //   this.updateDataSource(fieldKey, value);
-              //   onChange && onChange(dataSource, { index, type: "edit" });
-              // }}
-              onInput={(e) => {
-                let value = data[fieldKey] = e.target.value;
-                this.updateDataSource(fieldKey, value);
-                onChange && onChange(dataSource, { index, type: "edit" });
-              }}
-            />
-          )
+      if (!cell.render) {
+        return {
+          ...cell,
+          render: (text, record, index) => {
+            const fieldKey = `${index}_${cell.dataIndex}`;
+            return (
+              <div className="edit-cell">
+                <Input
+                  {...getFieldProps(fieldKey, {
+                    initialValue: text,
+                    getValueFromEvent: (...args) => {
+                      let value = getValueFromEvent(...args);
+                      this.update(fieldKey, value);
+                      return value;
+                    }
+                  })}
+                />
+              </div>
+            )
+          }
+        }
+      } else {
+        return {
+          ...cell,
+          render: (text, record, index) => {
+            const fieldKey = `${index}_${cell.dataIndex}`;
+            let getProps = (opts) => getFieldProps(fieldKey, Object.assign({
+              initialValue: text,
+            }, opts, {
+              getValueFromEvent: (...args) => {
+                let value = (opts.getValueFromEvent || getValueFromEvent)(...args);
+                this.update(fieldKey, value);
+                return value;
+              }
+            }));
+            return cell.render(text, record, index, getProps);
+          }
         }
       }
     });
     return columns;
   }
 
-  updateDataSource = (currentFieldKey, value) => {
-    const { data } = this.state;
-    let source = data;
+  /**
+   * 更新数据
+   */
+  update = (currentFieldKey, value) => {
+    let source = this.props.form.getFieldsValue();
+    let { onChange } = this.props;
     let { dataSource } = this.state;
-    for(let fieldKey in source) {
-      console.log(fieldKey)
-      let [_, index, key] = fieldKey.split("_");
+    for (let fieldKey in source) {
+      let [index, key] = fieldKey.split("_");
       if (currentFieldKey === fieldKey) {
         dataSource[index][key] = value;
+        this.setState({ dataSource });
+        onChange && onChange(dataSource, { index, type: "edit" });
+        break;
       }
     }
-    this.setState({ dataSource });
   }
-
 
   /**
    * 支持序号
    */
   createSN = () => {
     let { columns } = this.props;
+    let snFilterList = columns.filter(item => item.dataIndex === "sn");
+    if (snFilterList.length > 0) {
+      return;
+    }
     columns.unshift({
       title: "序号",
       dataIndex: "sn",
@@ -125,6 +128,10 @@ export default class EditTable extends React.Component {
    */
   createOperate = () => {
     let { columns } = this.props;
+    let operateFilterList = columns.filter(item => item.dataIndex === "operate");
+    if (operateFilterList.length > 0) {
+      return;
+    }
     columns.push({
       title: "操作",
       dataIndex: "operate",
@@ -163,9 +170,9 @@ export default class EditTable extends React.Component {
     const { columns, onChange } = this.props;
     let { dataSource } = this.state;
     let row = {};
-    columns.forEach(col => {
-      row[col.dataIndex] = "";
-    });
+    // columns.forEach(col => {
+    //   row[col.dataIndex] = "";
+    // });
     dataSource.push(row);
     this.setState({ dataSource });
     onChange && onChange(dataSource, {
@@ -174,54 +181,16 @@ export default class EditTable extends React.Component {
   }
 
   render() {
-    // const { getFieldDecorator } = this.props.form;
-    // console.log('render');
+    this.createOperate();
 
-    let { columns, onChange } = this.props;
-    let { dataSource } = this.state;
-    let myColumns = columns.map((cell, index) => {
-      return {
-        ...cell,
-        render: (text, record, index) => {
-          const fieldKey = `row_${index}_${cell.dataIndex}`;
-          const { data } = this.state;
-          data[fieldKey] = text;
-          return (
-            // <Input {...getFieldProps(fieldKey, {
-            //   initialValue: text,
-            //   getValueFromEvent: (...args) => {
-            //     console.log(getValueFromEvent(...args));
-            //     // this.updateDataSource(fieldKey, getValueFromEvent(...args));
-            //     onChange && onChange(dataSource, { index, type: "edit" });
-            //     return getValueFromEvent(...args);
-            //   }
-            // })}/>
-            <Input
-              key={fieldKey}
-              defaultValue={data[fieldKey]}
-              onChange={(e) => {
-                this.updateDataSource(fieldKey, e.target.value);
-                onChange && onChange(dataSource, { index, type: "edit" });
-              }}
-              // onBlur={(e) => {
-              //   // let value = data[fieldKey] = e.target.value;
-              //   this.updateDataSource(fieldKey, e.target.value);
-              //   onChange && onChange(dataSource, { index, type: "edit" });
-              // }}
-            />
-          )
-        }
-      }
-    });
-
-    console.log(myColumns);
+    this.props.hasSN && this.createSN();
 
     return (
       <div>
         <Table
-          columns={myColumns}
-          dataSource={this.state.dataSource}
-          rowKey={record => rowUuid()}
+          columns={this.getColumns()}
+          dataSource={this.props.dataSource}
+          rowKey={(record, index) => `${index}`}
           pagination={false}
           bordered={true}
           locale={{emptyText: <div><Icon type="frown" /> 暂无数据</div>}}
@@ -234,9 +203,6 @@ export default class EditTable extends React.Component {
             <Icon type="plus-circle" />
           </a>
         </div>
-        {/* {getFieldDecorator("name")(
-          <Input />
-        )} */}
         <div><a onClick={() => {
           console.log(this.state.data);
         }}>press</a></div>
