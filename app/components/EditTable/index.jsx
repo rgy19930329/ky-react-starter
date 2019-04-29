@@ -4,16 +4,14 @@
  * @date 2019-3-3
  */
 
+import "./index.less";
 import React from "react";
 import PropTypes from "prop-types";
 import { Form, Table, Icon, Input } from "antd";
 import { getValueFromEvent } from "rc-form/lib/utils";
+import Wrapper from "./wrapper";
 
-@Form.create({
-  // onValuesChange: (props, changedValues, allValues) => {
-  //   console.log(changedValues, allValues);
-  // }
-})
+@Form.create()
 export default class EditTable extends React.Component {
   static propTypes = {
     dataSource: PropTypes.array, // 数据源
@@ -32,62 +30,126 @@ export default class EditTable extends React.Component {
     this.state = {
       dataSource: props.dataSource || [],
     }
-
-    this.createOperate();
-
-    props.hasSN && this.createSN();
   }
 
   componentWillReceiveProps (nextProps) {
     this.setState({
       dataSource: nextProps.dataSource
     });
+    if (nextProps.validateCondition !== this.props.validateCondition) {
+      nextProps.form.validateFieldsAndScroll({ force: true }, (errors, values) => {
+        if (!!errors) {
+          console.log("Error in Form!!!");
+          return;
+        }
+        nextProps.onSubmit && nextProps.onSubmit(this.state.dataSource);
+      });
+    }
   }
 
-  getColumns = () => {
+  /**
+   * 获取字段校验结果
+   */
+  getValidateStatus = (field) => {
     const {
-      getFieldDecorator,
-      getFieldProps,
-      setFieldsValue,
-      getFieldsValue,
+      isFieldValidating,
+      getFieldError,
+      getFieldValue,
     } = this.props.form;
-    let { columns, onChange } = this.props;
-    let { dataSource } = this.state;
-    columns = columns.map(cell => {
+    if (!field) {
+      return {};
+    }
+    if (isFieldValidating(field)) {
       return {
-        ...cell,
-        render: (text, record, index) => {
-          const fieldKey = `${index}_${cell.dataIndex}`;
-          return (
-            <div className="edit-cell">
+        status: "validating",
+      };
+    }
+    if (!!getFieldError(field)) {
+      return {
+        status: "error",
+        message: getFieldError(field),
+      };
+    }
+    if (getFieldValue(field)) {
+      return {
+        status: "success",
+      }
+    }
+    return {};
+  }
+
+  /**
+   * 创建列模式
+   */
+  getColumns = () => {
+    let { form: { getFieldProps }, columns } = this.props;
+    columns = columns.map(cell => {
+      if (!cell.render) {
+        return {
+          ...cell,
+          render: (text, record, index) => {
+            const fieldKey = `${index}_${cell.dataIndex}`;
+            return (
               <Input
                 {...getFieldProps(fieldKey, {
                   initialValue: text,
                   getValueFromEvent: (...args) => {
-                    this.update(fieldKey, getValueFromEvent(...args));
-                    onChange && onChange(dataSource, { index, type: "edit" })
-                    return getValueFromEvent(...args);
+                    let value = getValueFromEvent(...args);
+                    this.update(fieldKey, value);
+                    return value;
                   }
                 })}
               />
-            </div>
-          )
+            )
+          }
+        }
+      } else {
+        return {
+          ...cell,
+          render: (text, record, index) => {
+            const fieldKey = `${index}_${cell.dataIndex}`;
+            const validateStatus = this.getValidateStatus(fieldKey);
+            let getProps = (opts) => getFieldProps(fieldKey, Object.assign({
+              initialValue: text,
+            }, opts, {
+              getValueFromEvent: (...args) => {
+                let value = (opts.getValueFromEvent || getValueFromEvent)(...args);
+                this.update(fieldKey, value);
+                return value;
+              }
+            }));
+            return (
+              <Wrapper validateStatus={validateStatus}>
+                {cell.render(text, record, index, getProps)}
+              </Wrapper>
+            )
+          }
         }
       }
     });
     return columns;
   }
 
+  /**
+   * 更新数据
+   */
   update = (currentFieldKey, value) => {
     let source = this.props.form.getFieldsValue();
+    let { onChange } = this.props;
     let { dataSource } = this.state;
     for (let fieldKey in source) {
       let [index, key] = fieldKey.split("_");
       if (currentFieldKey === fieldKey) {
         dataSource[index][key] = value;
+        this.setState({ dataSource });
+        onChange && onChange(dataSource, {
+          index,
+          record: dataSource[index],
+          type: "edit",
+        });
+        break;
       }
     }
-    this.setState({ dataSource });
   }
 
   /**
@@ -95,6 +157,10 @@ export default class EditTable extends React.Component {
    */
   createSN = () => {
     let { columns } = this.props;
+    let snFilterList = columns.filter(item => item.dataIndex === "sn");
+    if (snFilterList.length > 0) {
+      return;
+    }
     columns.unshift({
       title: "序号",
       dataIndex: "sn",
@@ -113,6 +179,10 @@ export default class EditTable extends React.Component {
    */
   createOperate = () => {
     let { columns } = this.props;
+    let operateFilterList = columns.filter(item => item.dataIndex === "operate");
+    if (operateFilterList.length > 0) {
+      return;
+    }
     columns.push({
       title: "操作",
       dataIndex: "operate",
@@ -152,7 +222,9 @@ export default class EditTable extends React.Component {
     let { dataSource } = this.state;
     let row = {};
     columns.forEach(col => {
-      row[col.dataIndex] = "";
+      if (!(col.dataIndex === "sn" || col.dataIndex === "operate")) {
+        row[col.dataIndex] = "";
+      }
     });
     dataSource.push(row);
     this.setState({ dataSource });
@@ -162,12 +234,16 @@ export default class EditTable extends React.Component {
   }
 
   render() {
+    this.createOperate();
+
+    this.props.hasSN && this.createSN();
+
     return (
       <div>
         <Table
           columns={this.getColumns()}
           dataSource={this.props.dataSource}
-          // rowKey={record => rowUuid()}
+          rowKey={(record, index) => `${index}`}
           pagination={false}
           bordered={true}
           locale={{emptyText: <div><Icon type="frown" /> 暂无数据</div>}}
@@ -183,4 +259,4 @@ export default class EditTable extends React.Component {
       </div>
     )
   }
-} 
+}
