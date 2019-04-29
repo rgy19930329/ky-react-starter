@@ -162,7 +162,6 @@ export default class EditTable extends React.Component {
   }
 
   render() {
-    const { getFieldDecorator } = this.props.form;
     return (
       <div>
         <Table
@@ -181,12 +180,6 @@ export default class EditTable extends React.Component {
             <Icon type="plus-circle" />
           </a>
         </div>
-        {/* {getFieldDecorator("name")(
-          <Input />
-        )} */}
-        <div><a onClick={() => {
-          console.log(this.props.form.getFieldsValue());
-        }}>press</a></div>
       </div>
     )
   }
