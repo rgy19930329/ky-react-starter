@@ -94,6 +94,7 @@ class PageEditTable extends React.Component {
 			<div>
 				<h2>可编辑表格</h2>
 				<EditTable
+					id="et1"
 					hasSN={true}
 					columns={this.createColumns()}
 					dataSource={this.state.dataSource}

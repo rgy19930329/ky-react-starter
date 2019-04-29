@@ -11,17 +11,21 @@ import { Form, Table, Icon, Input } from "antd";
 import { getValueFromEvent } from "rc-form/lib/utils";
 import Wrapper from "./wrapper";
 
+const EDITTABLE_PREFIX = "EDITTABLE";
+
 @Form.create()
 export default class EditTable extends React.Component {
   static propTypes = {
     dataSource: PropTypes.array, // 数据源
     hasSN: PropTypes.bool, // 是否需要支持序号
     onChange: PropTypes.func, // 列表变更回调
+    id: PropTypes.string, // edit table id
   }
 
   static defaultProps = {
     dataSource: [],
     hasSN: false,
+    id: "et",
   }
 
   constructor(props) {
@@ -82,13 +86,13 @@ export default class EditTable extends React.Component {
    * 创建列模式
    */
   getColumns = () => {
-    let { form: { getFieldProps }, columns } = this.props;
+    let { form: { getFieldProps }, columns, id } = this.props;
     columns = columns.map(cell => {
       if (!cell.render) {
         return {
           ...cell,
           render: (text, record, index) => {
-            const fieldKey = `${index}_${cell.dataIndex}`;
+            const fieldKey = `${EDITTABLE_PREFIX}_${id}_${index}_${cell.dataIndex}`;
             return (
               <Input
                 {...getFieldProps(fieldKey, {
@@ -107,7 +111,7 @@ export default class EditTable extends React.Component {
         return {
           ...cell,
           render: (text, record, index) => {
-            const fieldKey = `${index}_${cell.dataIndex}`;
+            const fieldKey = `${EDITTABLE_PREFIX}_${id}_${index}_${cell.dataIndex}`;
             const validateStatus = this.getValidateStatus(fieldKey);
             let getProps = (opts) => getFieldProps(fieldKey, Object.assign({
               initialValue: text,
@@ -138,7 +142,7 @@ export default class EditTable extends React.Component {
     let { onChange } = this.props;
     let { dataSource } = this.state;
     for (let fieldKey in source) {
-      let [index, key] = fieldKey.split("_");
+      let [prefix, id, index, key] = fieldKey.split("_");
       if (currentFieldKey === fieldKey) {
         dataSource[index][key] = value;
         this.setState({ dataSource });
