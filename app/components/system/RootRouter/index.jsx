@@ -6,7 +6,7 @@
 
 import React from "react";
 import { Route, Redirect, withRouter } from "react-router-dom";
-import AnimateRouter from "@components/AnimateRouter";
+import AnimateRouter from "@components/system/AnimateRouter";
 import { observer, inject } from "mobx-react";
 import Header from "@components/Header";
 import Login from "@pages/login";

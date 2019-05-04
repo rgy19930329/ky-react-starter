@@ -6,7 +6,7 @@
 
 import React from "react";
 import { Route } from "react-router-dom";
-import NotAuthorized from "@components/NotAuthorized";
+import NotAuthorized from "@components/system/NotAuthorized";
 import { observer, inject } from "mobx-react";
 
 @inject("authStore")

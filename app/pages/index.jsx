@@ -1,7 +1,7 @@
 import "./index.less";
 import React from "react";
 import { HashRouter } from "react-router-dom";
-import RootRouter from "@components/RootRouter";
+import RootRouter from "@components/system/RootRouter";
 import { Provider } from "mobx-react";
 import store from "@stores";
 
