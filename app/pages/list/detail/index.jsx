@@ -61,7 +61,7 @@ export default class ListDetail extends React.Component {
 									<Col span={6}><Label title="email" value={email} /></Col>
 									<Col span={6}><Label title="age" value={number} /></Col>
 									<Col span={6}><Label title="address" value={address} /></Col>
-									<Col span={24}><Label title="paragraph" value={paragraph} /></Col>
+									<Col span={24}><Label title="paragraph" value={paragraph} isLongText /></Col>
 								</Row>
 							)
 						},
