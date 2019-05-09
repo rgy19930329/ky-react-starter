@@ -3,6 +3,10 @@ import { Form, Button, Input } from "antd";
 import EnumSelect from "@components/EnumSelect";
 import EnumChoice from "@components/EnumChoice";
 import { fetch } from "@utils";
+import { each, set, add } from "@utils/wdio";
+
+const ref = new Wilddog("https://kylin.wilddogio.com/test");
+const usersRef = ref.child("users");
 
 @Form.create()
 export default class MyForm extends React.Component {
@@ -16,8 +20,14 @@ export default class MyForm extends React.Component {
 
 	componentDidMount() {
 		this.initFormData();
+		each(usersRef, (item, id) => {
+			console.log(id, item);
+		});
 	}
 
+	/**
+	 * 初始化表单数据
+	 */
 	initFormData = () => {
 		this.props.form.setFieldsValue({
 			name: "rgy",
@@ -28,6 +38,19 @@ export default class MyForm extends React.Component {
 		});
 	};
 
+	/**
+	 * 新增数据
+	 */
+	addOne = (item = {}) => {
+		console.log("item", item);
+		add(usersRef, {
+			age: 26
+		});
+	};
+
+	/**
+	 * 提交
+	 */
 	submit = (e) => {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
@@ -36,6 +59,7 @@ export default class MyForm extends React.Component {
 				return;
 			}
 			console.log(values);
+			this.addOne(values);
 		});
 	};
 
@@ -161,11 +185,13 @@ export default class MyForm extends React.Component {
 							/>
 						)}
 					</Form.Item>
-					<div style={{textAlign: "right"}}>
+					<div style={{ textAlign: "right" }}>
 						<Button
 							type="primary"
-							htmlType="submit">
-							console
+							htmlType="submit"
+							icon="check-circle"
+						>
+							提交
 						</Button>
 					</div>
 				</Form>
