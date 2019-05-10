@@ -42,10 +42,8 @@ export default class MyForm extends React.Component {
 	 * 新增数据
 	 */
 	addOne = (item = {}) => {
-		console.log("item", item);
-		add(usersRef, {
-			age: 26
-		});
+		console.log(item);
+		add(usersRef, item);
 	};
 
 	/**
@@ -58,7 +56,6 @@ export default class MyForm extends React.Component {
 				console.log("Form Values Error!!!");
 				return;
 			}
-			console.log(values);
 			this.addOne(values);
 		});
 	};
