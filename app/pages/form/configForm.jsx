@@ -134,6 +134,11 @@ export default class ConfigForm extends React.Component {
           <Input {...inputProps()} />
         )
       },
+      "textarea": () => {
+        return (
+          <Input type="textarea" row={4} {...inputProps()} />
+        )
+      },
       "date": () => {
         return (
           <DatePicker {...inputProps()} />
