@@ -6,7 +6,7 @@
 
 import "./custom.less";
 import React from "react";
-import { Icon, Modal, Upload, Button, message } from "antd";
+import { Icon, Modal, Upload, message } from "antd";
 import uniqueid from "uniqueid";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -173,13 +173,13 @@ export default class RichText extends React.Component {
         });
       },
       onChange: ({file, fileList}) => {
+        this.setState({ fileList });
         if (file.status === "done") {
           message.success(`${file.name} 上传成功`);
-          this.setState({ fileList });
         } else if (file.status === "error") {
           message.error(`${file.name} 上传失败`);
         }
-      },
+      }
     };
     return (
       <div style={{marginTop: 20}}>
@@ -213,6 +213,7 @@ export default class RichText extends React.Component {
           {...this.props}
         />
         <Modal
+          wrapClassName="preview-modal"
           visible={previewVisible}
           footer={null}
           onCancel={() => this.setState({ previewVisible: false })}
