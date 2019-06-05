@@ -21,6 +21,7 @@ import Animate from "@pages/animate";
 import Mobx from "@pages/mobx";
 import MyEcharts from "@pages/echarts";
 import PageEditTable from "@pages/edit-table";
+import PageRichText from "@pages/rich-text";
 
 @withRouter
 class AnimateRouter extends React.Component {
@@ -34,6 +35,7 @@ class AnimateRouter extends React.Component {
           classNames="message"
         >
           <Switch location={location}>
+            <AuthRouter path="/rich-text" component={PageRichText} />
             <AuthRouter path="/edit-table" component={PageEditTable} />
             <AuthRouter path="/echarts" component={MyEcharts} />
             <AuthRouter path="/mobx" component={Mobx} />
