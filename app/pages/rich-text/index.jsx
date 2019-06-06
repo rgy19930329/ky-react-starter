@@ -16,7 +16,9 @@ export default class Page extends React.Component {
 		return (
 			<div>
 				<h2>富文本编辑器</h2>
-				<RichText {...this.props.form.getFieldProps("text")}/>
+				<RichText
+					{...this.props.form.getFieldProps("text")}
+				/>
 				<div style={{marginTop: 20}}>
 					<Button
 						type="primary"

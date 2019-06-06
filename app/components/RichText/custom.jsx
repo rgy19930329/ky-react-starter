@@ -25,16 +25,16 @@ Quill.register(Size, true);
  * @param {*} props 
  */
 const CustomToolbar = (props) => {
-  const colors = [
-    "#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", "#9933ff",
-    "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff",
-    "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff",
-    "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2",
-    "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466",
-  ];
-  const options = colors.map(color => (
-    <option key={color} value={color}></option>
-  ));
+  // const colors = [
+  //   "#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", "#9933ff",
+  //   "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", "#cce0f5", "#ebd6ff",
+  //   "#bbbbbb", "#f06666", "#ffc266", "#ffff66", "#66b966", "#66a3e0", "#c285ff",
+  //   "#888888", "#a10000", "#b26b00", "#b2b200", "#006100", "#0047b2", "#6b24b2",
+  //   "#444444", "#5c0000", "#663d00", "#666600", "#003700", "#002966", "#3d1466",
+  // ];
+  // const options = colors.map(color => (
+  //   <option key={color} value={color}></option>
+  // ));
   return (
     <div id={props.id} style={{borderBottom: "none"}}>
       <select className="ql-header" defaultValue={""}>
@@ -52,18 +52,9 @@ const CustomToolbar = (props) => {
         <option value="14px">14px</option>
         <option value="12px">12px</option>
       </select>
-      <select className="ql-color">
-        {/* {options} */}
-      </select>
-      <select className="ql-background">
-        {/* {options} */}
-      </select>
-      <select className="ql-align">
-        {/* <option></option>
-        <option value="center"></option>
-        <option value="right"></option>
-        <option value="justify"></option> */}
-      </select>
+      <select className="ql-color"></select>
+      <select className="ql-background"></select>
+      <select className="ql-align"></select>
       <button className="ql-list" value="ordered"></button>
       <button className="ql-list" value="bullet"></button>
       <button className="ql-bold"></button>
@@ -78,7 +69,11 @@ const CustomToolbar = (props) => {
         <Icon type="twitter" />
       </button>
       <button className="ql-kyimage">
-        <Icon type="file-image" />
+        <svg viewBox="0 0 18 18">
+          <rect className="ql-stroke" height="10" width="12" x="3" y="4"></rect>
+          <circle className="ql-fill" cx="6" cy="7" r="1"></circle>
+          <polyline className="ql-even ql-fill" points="5 12 5 11 7 9 8 10 11 7 13 9 13 12 5 12"></polyline>
+        </svg>
       </button>
       <button className="ql-clean"></button>
     </div>
@@ -91,6 +86,7 @@ export default class RichText extends React.Component {
     onChange: () => {},
     height: 300,
     readOnly: false,
+    imageUploadProps: {},
   }
 
   formats = [
@@ -121,7 +117,8 @@ export default class RichText extends React.Component {
           },
           kyimage: function kyimage () {
             Modal.confirm({
-              width: 438,
+              className: "image-upload-modal",
+              width: 400,
               title: "图片上传",
               content: self.renderUpload(),
               cancelText: "取消",
@@ -135,7 +132,7 @@ export default class RichText extends React.Component {
                 this.quill.focus(); // 重要
                 fileList.forEach(file => {
                   const cursorPosition = this.quill.getSelection().index;
-                  let url = file.response.url || file.response.thumbUrl;
+                  let url = file.url;
                   this.quill.insertEmbed(cursorPosition, "image", url);
                   this.quill.setSelection(cursorPosition + 1);
                 });
@@ -157,7 +154,9 @@ export default class RichText extends React.Component {
    * 渲染图片上传组件
    */
   renderUpload = () => {
-    const props = {
+    const { imageUploadProps } = this.props;
+    const { dataTransform, onEnd } = imageUploadProps;
+    let props = {
       name: "file",
       action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
       headers: {
@@ -165,22 +164,29 @@ export default class RichText extends React.Component {
       },
       accept: ".jpg,.jpeg,.png,.gif",
       listType: "picture-card",
-      onPreview: (info) => {
-        let url = info.response.url || info.thumbUrl || info.response.thumbUrl;
+      onPreview: ({ response }) => {
+        let { url } = dataTransform ? dataTransform(response) : response;
         this.setState({
           previewImage: url,
           previewVisible: true,
         });
       },
-      onChange: ({file, fileList}) => {
-        this.setState({ fileList });
-        if (file.status === "done") {
-          message.success(`${file.name} 上传成功`);
-        } else if (file.status === "error") {
+      onChange: ({ file, fileList }) => {
+        if (file.status === "error") {
           message.error(`${file.name} 上传失败`);
+          return;
+        }
+        if (file.status === "done") {
+          onEnd && onEnd(file);
+          let newFileList = fileList.map(file => {
+            const { response } = file;
+            return dataTransform ? dataTransform(response) : response;
+          });
+          this.setState({ fileList: newFileList });
         }
       }
     };
+    props = Object.assign({}, props, imageUploadProps);
     return (
       <div style={{marginTop: 20}}>
         <Upload {...props}>
@@ -193,13 +199,13 @@ export default class RichText extends React.Component {
 
   render() {
     let { id, previewVisible, previewImage } = this.state;
-    let { height, value, readOnly } = this.props;
+    let { height, value, readOnly, style = {} } = this.props;
     if (readOnly) {
       return (
         <div
           className="ql-editor"
           dangerouslySetInnerHTML={{__html: value}}
-          {...this.props}
+          style={style}
         ></div>
       )
     }
