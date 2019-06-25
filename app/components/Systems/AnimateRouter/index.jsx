@@ -9,8 +9,8 @@ import React from "react";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 
-import AuthRouter from "@components/system/AuthRouter";
-import NotFound from "@components/system/NotFound";
+import AuthRouter from "@components/Systems/AuthRouter";
+import NotFound from "@components/Systems/NotFound";
 
 import Home from "@pages/home";
 import Config from "@pages/config";
