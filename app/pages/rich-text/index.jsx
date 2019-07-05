@@ -16,15 +16,21 @@ export default class Page extends React.Component {
 		return (
 			<div>
 				<h2>富文本编辑器</h2>
-				<RichText
-					{...this.props.form.getFieldProps("text")}
-				/>
+				<Form.Item>
+					<RichText
+						{...this.props.form.getFieldProps("text", {
+							rules: [
+								{ required: true, message: "富文本内容不能为空" }
+							]
+						})}
+					/>
+				</Form.Item>
 				<div style={{marginTop: 20}}>
 					<Button
 						type="primary"
 						onClick={() => {
 							console.log(text);
-							this.setState({ html: text });
+							// this.setState({ html: text });
             }}
 					>
 						提交

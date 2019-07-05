@@ -197,6 +197,33 @@ export default class RichText extends React.Component {
     )
   };
 
+  /**
+   * 修复 data-__meta 数据，以解决组件必填校验问题
+   */
+  fixDataMeta = (meta) => {
+    let { rules = [], validate = [] } = meta;
+    let requiredRule = rules.filter(item => item.required);
+    if (requiredRule.length > 0) {
+      rules.push({
+        validator: (rule, value, callback) => {
+          if (value === "<p><br></p>") {
+            callback(requiredRule[0].message || "字段不能为空");
+            return;
+          }
+          callback();
+        }
+      });
+      validate = validate.map(item => {
+        item.rules = rules;
+        return item;
+      });
+    }
+    return {
+      rules,
+      validate,
+    }
+  };
+
   render() {
     let { id, previewVisible, previewImage } = this.state;
     let { height, value, readOnly, style = {} } = this.props;
@@ -209,6 +236,9 @@ export default class RichText extends React.Component {
         ></div>
       )
     }
+    let newProps = Object.assign({}, this.props, {
+      ["data-__meta"]: this.fixDataMeta(this.props["data-__meta"]),
+    });
     return (
       <div style={{height: height}}>
         <CustomToolbar id={id} />
@@ -216,7 +246,7 @@ export default class RichText extends React.Component {
           style={{height: height - 42}}
           formats={this.formats}
           modules={this.modules}
-          {...this.props}
+          {...newProps}
         />
         <Modal
           wrapClassName="preview-modal"
