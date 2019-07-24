@@ -4,7 +4,7 @@ A pure front end frame base on react, combine antd
 
 ## Project setup
 ```
-npm install
+npm install --verbose
 ```
 
 ## Development
