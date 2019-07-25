@@ -24,3 +24,12 @@ npm run build
 https://www.easy-mock.com/project/5ad07a89909da41e79f4a8a3
 
 ranguangyu/\*\*\*\*\*\*
+
+### Add Auth
+
+```
+/resource : 权限列表
+
+/navs : 导航列表
+
+```

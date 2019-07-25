@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const serverProxy = require('./serverProxy');
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -12,7 +13,7 @@ const webpackConfig = {
 	entry: path.resolve(__dirname, './app/app.js'),
 	output: {
 		path: path.resolve(__dirname, './static'),
-		filename: 'index-[hash:8].js'
+		filename: '[name]_[hash:6].js',
   },
   resolve: {
     extensions: ['.js', '.jsx'],
@@ -73,6 +74,7 @@ const webpackConfig = {
       template: path.resolve(__dirname, './app/template.html'),
 		}),
     new ExtractTextPlugin('style.css'),
+    new CleanWebpackPlugin(),
 	]
 }
 

@@ -8,6 +8,7 @@ import "./index.less";
 import React from "react";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
+import HOCAsync from "@components/HOCAsync";
 
 import AuthRouter from "@components/Systems/AuthRouter";
 import NotFound from "@components/Systems/NotFound";
@@ -23,6 +24,9 @@ import MyEcharts from "@pages/echarts";
 import PageEditTable from "@pages/edit-table";
 import PageRichText from "@pages/rich-text";
 
+// tips: react-router v4 中取消了getComponent方法，现在用下面的方案实现组件的“按需加载”
+const AsyncPage = HOCAsync(() => import("@pages/async-page"));
+
 @withRouter
 class AnimateRouter extends React.Component {
   render() {
@@ -35,6 +39,7 @@ class AnimateRouter extends React.Component {
           classNames="message"
         >
           <Switch location={location}>
+            <AuthRouter path="/async-page" component={AsyncPage} />
             <AuthRouter path="/rich-text" component={PageRichText} />
             <AuthRouter path="/edit-table" component={PageEditTable} />
             <AuthRouter path="/echarts" component={MyEcharts} />
