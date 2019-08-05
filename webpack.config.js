@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const serverProxy = require('./serverProxy');
 
@@ -59,7 +60,7 @@ const webpackConfig = {
         loader: 'url-loader',
         query: {
           limit: 1024 * 10, // 10k以下编译成base64
-          name: 'img/[name]-[hash:6].[ext]',
+          name: 'img/[name]_[hash:6].[ext]',
         }
       },
       {
@@ -69,7 +70,12 @@ const webpackConfig = {
     ]
   },
 	plugins: [
-		new webpack.BannerPlugin('版权所有，翻版必究'),
+    new CircularDependencyPlugin({
+      exclude: /node_modules/,
+      failOnError: false,
+      cwd: process.cwd(),
+    }),
+    new webpack.BannerPlugin('版权所有，翻版必究'),
 		new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './app/template.html'),
 		}),
@@ -87,7 +93,7 @@ if(isDev) {
     }),
   );
   webpackConfig.devServer = {
-    contentBase: path.resolve(__dirname, './static'),
+    contentBase: path.resolve(__dirname, './dist'),
     historyApiFallback: true,
     hot: true,
     progress: true,
