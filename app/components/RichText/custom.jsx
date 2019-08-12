@@ -65,9 +65,9 @@ const CustomToolbar = (props) => {
       <button className="ql-link"></button>
       <button className="ql-image"></button>
       <button className="ql-code-block"></button>
-      <button className="ql-insertStar">
+      {/* <button className="ql-insertStar">
         <Icon type="twitter" />
-      </button>
+      </button> */}
       <button className="ql-kyimage">
         <svg viewBox="0 0 18 18">
           <rect className="ql-stroke" height="10" width="12" x="3" y="4"></rect>
