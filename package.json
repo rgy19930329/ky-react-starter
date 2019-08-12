@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server",
     "build": "webpack",
-    "build:prod": "cross-env NODE_ENV=production webpack"
+    "build:prod": "cross-env NODE_ENV=production webpack --color --progress",
+    "http-server": "cd ./dist && http-server -c-1 -o -P https://easy-mock.com/mock/5ad07a89909da41e79f4a8a3"
   },
   "author": "rgy",
   "license": "ISC",
@@ -22,6 +23,7 @@
     "rc-queue-anim": "^1.6.11",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
+    "react-quill": "^1.3.3",
     "react-router-dom": "^4.3.1",
     "react-transition-group": "^2.5.3",
     "uniqueid": "^1.0.0"
@@ -36,6 +38,8 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
+    "circular-dependency-plugin": "^4.0.0",
+    "clean-webpack-plugin": "^3.0.0",
     "cross-env": "^5.2.0",
     "css-loader": "^1.0.1",
     "extract-text-webpack-plugin": "^3.0.2",
@@ -50,6 +54,7 @@
     "url-loader": "^1.1.2",
     "webpack": "^3.10.0",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^2.10.1"
+    "webpack-dev-server": "^2.10.1",
+    "webpack-parallel-uglify-plugin": "^1.0.2"
   }
 }

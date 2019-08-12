@@ -60,6 +60,8 @@ export default class EnumSelect extends React.Component {
     const list = await enumPromise;
     if (Object.prototype.toString.call(list) === "[object Array]" && list.length > 0) {
       this.setState({ list });
+    } else {
+      this.setState({ list: [] });
     }
   }
 

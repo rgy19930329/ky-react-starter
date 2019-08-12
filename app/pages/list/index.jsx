@@ -1,6 +1,7 @@
 import React from "react";
 import { Table } from "antd";
 import { fetch } from "@utils";
+import CellLimit from "@components/CellLimit";
 
 export default class List extends React.Component {
 
@@ -47,18 +48,28 @@ export default class List extends React.Component {
 				key: "name",
 				render: (value, record) => {
 					const { id } = record;
-					return <a href={`#/detail/${id}`}>{value}</a>
+					return (
+						<CellLimit width={100}>
+							<a href={`#/detail/${id}`}>{value}</a>
+						</CellLimit>
+					)
 				}
 			},
 			{
 				title: "email",
 				dataIndex: "email",
 				key: "email",
+				render: (text) => {
+					return <CellLimit width={150}>{text}</CellLimit>
+				}
 			},
 			{
 				title: "address",
 				dataIndex: "address",
 				key: "address",
+				render: (text) => {
+					return <CellLimit width={150}>{text}</CellLimit>
+				}
 			},
 			{
 				title: "string",

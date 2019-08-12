@@ -3,6 +3,9 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
 const serverProxy = require('./serverProxy');
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -11,8 +14,8 @@ const isDev = process.env.NODE_ENV === 'development';
 const webpackConfig = {
 	entry: path.resolve(__dirname, './app/app.js'),
 	output: {
-		path: path.resolve(__dirname, './static'),
-		filename: 'index-[hash:8].js'
+		path: path.resolve(__dirname, './dist'),
+		filename: '[name]_[hash:6].js',
   },
   resolve: {
     extensions: ['.js', '.jsx'],
@@ -58,7 +61,7 @@ const webpackConfig = {
         loader: 'url-loader',
         query: {
           limit: 1024 * 10, // 10k以下编译成base64
-          name: 'img/[name]-[hash:6].[ext]',
+          name: 'img/[name]_[hash:6].[ext]',
         }
       },
       {
@@ -68,12 +71,46 @@ const webpackConfig = {
     ]
   },
 	plugins: [
-		new webpack.BannerPlugin('版权所有，翻版必究'),
+    new CircularDependencyPlugin({
+      exclude: /node_modules/,
+      failOnError: false,
+      cwd: process.cwd(),
+    }),
+    new webpack.BannerPlugin('版权所有，翻版必究'),
 		new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './app/template.html'),
 		}),
     new ExtractTextPlugin('style.css'),
+    new CleanWebpackPlugin(),
 	]
+}
+
+
+if (isProd) {
+  webpackConfig.plugins.push(
+    // 压缩 JS 代码
+    new ParallelUglifyPlugin({
+      sourceMap: true,
+      uglifyJS: {
+        output: {
+          // 紧凑输出
+          beautify: false,
+          // 删除注释
+          comments: false,
+        },
+        compress: {
+          // 删除所有的 console 语句
+          drop_console: true,
+          // 内嵌定义了但是只用到一次的变量
+          collapse_vars: true,
+          // 提取出现多次但是没有定义变量取引用的静态值
+          reduce_vars: true,
+        },
+        // 支持IE8
+        // ie8: true,
+      }
+    }),
+  );
 }
 
 if(isDev) {
@@ -85,7 +122,7 @@ if(isDev) {
     }),
   );
   webpackConfig.devServer = {
-    contentBase: path.resolve(__dirname, './static'),
+    contentBase: path.resolve(__dirname, './dist'),
     historyApiFallback: true,
     hot: true,
     progress: true,
