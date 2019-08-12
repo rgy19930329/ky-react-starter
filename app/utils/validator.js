@@ -25,3 +25,7 @@ const amountValidator = (rule, value, callback) => {
 export {
   amountValidator,
 }
+
+export default {
+  amountValidator,
+}
