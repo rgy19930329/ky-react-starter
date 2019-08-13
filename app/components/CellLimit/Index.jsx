@@ -1,5 +1,5 @@
 /**
- * @desc 组件 - CellLimit - 超出限制宽度部分通过...展示
+ * @desc 组件 - CellLimit - 超出限制宽度部分通过省略号展示
  * @author rgy
  * @date 2019-07-23 18:57:51
  */
@@ -9,12 +9,13 @@ import React from "react";
 import PropTypes from "prop-types";
 
 export default class CellLimit extends React.Component {
+  
   static propTypes = {
-    width: PropTypes.number,
+    width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }
 
   static defaultProps = {
-    
+    width: "100%",
   }
 
   constructor(props) {
