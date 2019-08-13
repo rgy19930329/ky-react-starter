@@ -6,6 +6,10 @@
 
 ## 参数说明
 
+```
+mode: "part"（默认）, "all"
+```
+
 ## 组件使用
 
 ```javascript
@@ -39,4 +43,23 @@ export default class EnumRadio extends React.Component {
     this.setState({ loaded: true });
   }
 }
+//
+import HOCLoading from "nice-ui";
+
+@HOCLoading("all")
+export default class EnumRadio extends React.Component {
+  state = {
+    loaded: false,
+  };
+}
+//
+import HOCLoading from "nice-ui";
+
+class EnumRadio extends React.Component {
+  state = {
+    loaded: false,
+  };
+}
+
+export default HOCLoading("all")(EnumRadio);
 ```
