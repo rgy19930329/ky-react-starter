@@ -4,9 +4,9 @@
  * @date 2019-01-27
  */
 
-import React from 'react';
-import EnumCheckbox from './EnumCheckbox';
-import EnumRadio from './EnumRadio';
+import React from "react";
+import EnumCheckbox from "./EnumCheckbox";
+import EnumRadio from "./EnumRadio";
 
 class EnumChoice extends React.Component {}
 
