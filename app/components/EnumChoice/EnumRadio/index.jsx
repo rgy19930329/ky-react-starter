@@ -43,10 +43,12 @@ export default class EnumRadio extends React.Component {
   }
 
   load = async (enumPromise) => {
+    this.setState({ loaded: false });
     const list = await enumPromise;
     if (list.length > 0) {
       this.setState({ list });
     }
+    this.setState({ loaded: true });
   }
 
   render() {
