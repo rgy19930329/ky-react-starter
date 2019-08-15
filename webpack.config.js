@@ -80,7 +80,11 @@ const webpackConfig = {
 		new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './app/template.html'),
 		}),
-    new ExtractTextPlugin('style.css'),
+    // new ExtractTextPlugin('style.css'),
+    new ExtractTextPlugin({
+      filename: '[name].css',
+      disable: isDev ? true : false,
+    }),
     new CleanWebpackPlugin(),
 	]
 }
