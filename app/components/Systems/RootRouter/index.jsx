@@ -11,11 +11,21 @@ import { observer, inject } from "mobx-react";
 import Header from "@components/Header";
 import Login from "@pages/login";
 import Cookie from "js-cookie";
+import NProgress from "nprogress";
 
 @withRouter
 @inject("authStore")
 @observer
 class RootRouter extends React.Component {
+
+  componentWillUpdate() {
+    NProgress.start();
+  }
+
+  componentDidUpdate() {
+    NProgress.done();
+  }
+
   componentDidMount() {
     this.props.authStore.load();
   }
