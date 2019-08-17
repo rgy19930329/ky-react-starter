@@ -10,7 +10,6 @@ import PropTypes from "prop-types";
 import { Form, Table, Icon, Input } from "antd";
 import { getValueFromEvent } from "rc-form/lib/utils";
 import Wrapper from "./wrapper";
-import { resolve } from "url";
 
 const EDITTABLE_PREFIX = "EDITTABLE";
 
