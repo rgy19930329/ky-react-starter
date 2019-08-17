@@ -10,16 +10,19 @@ import PropTypes from "prop-types";
 import { Form, Table, Icon, Input } from "antd";
 import { getValueFromEvent } from "rc-form/lib/utils";
 import Wrapper from "./wrapper";
+import { resolve } from "url";
 
 const EDITTABLE_PREFIX = "EDITTABLE";
 
 @Form.create()
 export default class EditTable extends React.Component {
+
   static propTypes = {
     dataSource: PropTypes.array, // 数据源
     hasSN: PropTypes.bool, // 是否需要支持序号
     onChange: PropTypes.func, // 列表变更回调
     id: PropTypes.string, // edit table id
+    context: PropTypes.object.isRequired, // 父组件执行环境，必填
   }
 
   static defaultProps = {
@@ -36,19 +39,34 @@ export default class EditTable extends React.Component {
     }
   }
 
+  componentDidMount() {
+    let { context, id } = this.props;
+    context[id] = this;
+  }
+
   componentWillReceiveProps (nextProps) {
     this.setState({
       dataSource: nextProps.dataSource
     });
-    if (nextProps.validateCondition !== this.props.validateCondition) {
-      nextProps.form.validateFieldsAndScroll({ force: true }, (errors, values) => {
+  }
+
+  /**
+   * 执行提交
+   */
+  doSubmit = () => {
+    const { id, form, onSubmit } = this.props;
+    const { dataSource } = this.state;
+    return new Promise((resolve, reject) => {
+      form.validateFieldsAndScroll({ force: true }, (errors, values) => {
         if (!!errors) {
-          console.log("Error in Form!!!");
+          console.log(`可编辑表格 id=${id} 校验失败`, errors);
+          reject(errors);
           return;
         }
-        nextProps.onSubmit && nextProps.onSubmit(this.state.dataSource);
+        onSubmit && onSubmit(dataSource);
+        resolve({ id, dataSource });
       });
-    }
+    });
   }
 
   /**
@@ -239,7 +257,6 @@ export default class EditTable extends React.Component {
 
   render() {
     this.createOperate();
-
     this.props.hasSN && this.createSN();
 
     return (

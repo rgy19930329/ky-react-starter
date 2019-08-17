@@ -95,22 +95,32 @@ class PageEditTable extends React.Component {
 				<h2>可编辑表格</h2>
 				<EditTable
 					id="et1"
+					context={this}
 					hasSN={true}
 					columns={this.createColumns()}
 					dataSource={this.state.dataSource}
-					// onChange={(dataSource) => {
-					// 	this.setState({ dataSource });
-					// }}
-					validateCondition={this.state.validateCondition}
-					onSubmit={(dataSource) => {
-						console.log(dataSource);
-						message.success("提交成功");
-					}}
+				/>
+				<EditTable
+					id="et2"
+					context={this}
+					hasSN={true}
+					columns={this.createColumns()}
+					dataSource={this.state.dataSource}
 				/>
 				<div className="handler">
 					<Button
 						type="primary"
-						onClick={() => this.setState({ validateCondition: Date.now() })}
+						onClick={async () => {
+							Promise.all([
+								this["et1"].doSubmit(),
+								this["et2"].doSubmit(),
+							]).then(results => {
+								console.log(results);
+								console.log("校验通过，允许提交");
+							}).catch(e => {
+								console.error("校验失败");
+							});
+						}}
 					>
 						提交
 					</Button>
