@@ -1,15 +1,33 @@
 import React from "react";
-import { Spin } from "antd";
+import PropTypes from "prop-types";
+import { Spin, Form } from "antd";
 import { fetch } from "@utils";
+import Child from "./child";
+import RInput from "@components/RInput";
+import { Section } from "nice-ui";
 
+@Form.create()
 export default class Config extends React.Component {
+
+	static childContextTypes = {
+		title: PropTypes.string,
+		form: PropTypes.object,
+	};
+
+	getChildContext() {
+		return {
+			title: "ranguangyu",
+			form: this.props.form,
+		}
+	}
+
 	state = {
 		count: null,
 		filters: {},
 		loading: true,
 	};
 
-	async componentDidMount () {
+	async componentDidMount() {
 		let result = await fetch({
 			url: "https://api.football-data.org/v2/matches",
 			headers: {
@@ -25,10 +43,11 @@ export default class Config extends React.Component {
 	}
 
 	render() {
+		const { getFieldDecorator } = this.props.form;
 		const { loading, count, filters: { dateFrom, dateTo, permission } } = this.state;
 		return (
 			<div>
-        <h2>配置</h2>
+				<h2>配置</h2>
 				<Spin spinning={loading}>
 					<div>
 						<div>count: {count}</div>
@@ -37,7 +56,19 @@ export default class Config extends React.Component {
 						<div>permission: {permission}</div>
 					</div>
 				</Spin>
-      </div>
+				<Section title="测试 context 传值">
+					<Child></Child>
+				</Section>
+				<Section title="测试 RInput 组件">
+					{getFieldDecorator("name", {
+						rules: [
+							{ required: true, message: "值不能不空" },
+						]
+					})(
+						<RInput style={{width: 200}} />
+					)}
+				</Section>
+			</div>
 		)
 	}
 }

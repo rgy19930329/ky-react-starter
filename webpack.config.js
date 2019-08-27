@@ -36,7 +36,11 @@ const webpackConfig = {
       {
         test: /\.(js|jsx)$/,
         loader: 'babel-loader',
-        include: path.resolve(__dirname, './app'),
+        // include: path.resolve(__dirname, './app'),
+        include: [
+          path.resolve(__dirname, 'app'),
+          path.resolve(__dirname, 'node_modules/nice-ui'),
+        ],
         exclude: '/node_modules/',
       },
       {

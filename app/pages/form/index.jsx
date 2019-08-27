@@ -12,7 +12,7 @@ export default class MyForm extends React.Component {
 			<div>
 				<h2>表单Demo</h2>
 				<Tabs
-					defaultActiveKey="2"
+					defaultActiveKey="1"
 					panes={[
 						{
 							tab: "原生表单",

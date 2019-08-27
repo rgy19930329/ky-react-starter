@@ -19,6 +19,7 @@
     "js-cookie": "^2.2.0",
     "mobx": "^4.8.0",
     "mobx-react": "^5.2.8",
+    "nice-ui": "git+https://github.com/rgy19930329/nice-ui.git#master",
     "nprogress": "^0.2.0",
     "prop-types": "^15.6.2",
     "rc-queue-anim": "^1.6.11",
